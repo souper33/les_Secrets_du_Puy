@@ -132,11 +132,14 @@ input,textarea{cursor:text;}
 .tab.active{background:rgba(201,146,42,.2);color:var(--gold-light);box-shadow:0 0 8px rgba(201,146,42,.2);}
 
 /* ───────── BUTTONS ───────── */
-/* Bouton Google — design Material standard avec accent doré au hover */
-.btn-google{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:#fff;color:#3c4043;font-family:'Roboto','EB Garamond',sans-serif;font-size:14px;font-weight:500;padding:11px 16px;border:1px solid rgba(201,146,42,.4);border-radius:6px;cursor:pointer;transition:all .2s;letter-spacing:.04em;margin-bottom:6px;box-shadow:0 2px 8px rgba(0,0,0,.25),0 0 12px rgba(201,146,42,.1);}
-.btn-google:hover:not(:disabled){background:#f8f8f8;border-color:var(--gold);box-shadow:0 4px 16px rgba(201,146,42,.35),0 0 18px rgba(232,184,75,.2);transform:translateY(-1px);}
+/* Bouton Google — thème médiéval doré, accent royal */
+.btn-google{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:12px;width:100%;background:linear-gradient(135deg,rgba(20,14,6,.95),rgba(40,28,12,.95));color:var(--gold-pale);font-family:'Cinzel',serif;font-size:13px;font-weight:600;padding:11px 16px;border:1px solid rgba(201,146,42,.5);border-radius:5px;cursor:pointer;transition:all .25s;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;box-shadow:0 4px 16px rgba(0,0,0,.4),inset 0 1px 0 rgba(232,184,75,.15);}
+.btn-google::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(232,184,75,.18),transparent);transition:left .6s ease;pointer-events:none;}
+.btn-google:hover:not(:disabled){background:linear-gradient(135deg,rgba(40,28,12,.98),rgba(60,40,18,.98));border-color:var(--gold-light);color:var(--gold-light);box-shadow:0 6px 22px rgba(201,146,42,.35),0 0 24px rgba(232,184,75,.18),inset 0 1px 0 rgba(232,184,75,.25);transform:translateY(-1px);}
+.btn-google:hover:not(:disabled)::before{left:100%;}
 .btn-google:active:not(:disabled){transform:translateY(0);}
-.btn-google:disabled{opacity:.6;cursor:not-allowed;}
+.btn-google:disabled{opacity:.55;cursor:not-allowed;}
+.btn-google .g-logo{display:flex;align-items:center;justify-content:center;width:24px;height:24px;background:#fff;border-radius:50%;flex-shrink:0;box-shadow:0 0 0 1px rgba(232,184,75,.4),0 2px 8px rgba(0,0,0,.3);}
 .btn-google svg{flex-shrink:0;}
 
 /* Divider "OU" */
@@ -511,6 +514,89 @@ input,textarea{cursor:text;}
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;}
   .crest,.svg-crest,.flame,.daily-streak .flame,.particle,.ember{animation:none !important;}
 }
+
+/* ════════════════════════════════════════════════════════════ */
+/* ─────────────── MODE GEOGUESSR (Pisteur) ─────────────────── */
+/* ════════════════════════════════════════════════════════════ */
+
+/* Setup : sélection rounds */
+.rounds-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+@media(max-width:520px){.rounds-grid{grid-template-columns:1fr;}}
+.rounds-card{background:rgba(0,0,0,.3);border:1px solid rgba(201,146,42,.25);border-radius:6px;padding:14px 10px;text-align:center;cursor:pointer;transition:all .2s;}
+.rounds-card:hover{background:rgba(201,146,42,.1);border-color:rgba(232,184,75,.5);transform:translateY(-2px);}
+.rounds-card.sel{background:linear-gradient(135deg,rgba(201,146,42,.2),rgba(232,184,75,.05));border-color:var(--gold);box-shadow:0 0 18px rgba(201,146,42,.25);}
+.rounds-card .r-num{font-family:'Cinzel Decorative',cursive;font-size:32px;color:var(--gold-light);line-height:1;}
+.rounds-card .r-lbl{font-family:'Cinzel',serif;font-size:11px;color:var(--gold-pale);letter-spacing:.06em;text-transform:uppercase;margin-top:4px;}
+.rounds-card .r-time{font-size:10px;color:rgba(245,217,138,.5);margin-top:3px;}
+
+/* Game screen */
+.geo-screen{position:relative;}
+.geo-topbar{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(0,0,0,.5);border-bottom:1px solid rgba(201,146,42,.3);margin:-1px -1px 14px;border-radius:8px 8px 0 0;}
+.geo-round-info{font-family:'Cinzel',serif;font-size:13px;color:var(--gold-pale);letter-spacing:.06em;text-transform:uppercase;}
+.geo-round-info strong{color:var(--gold-light);font-family:'Cinzel Decorative',cursive;font-size:18px;margin:0 4px;}
+.geo-score-info{font-family:'Cinzel Decorative',cursive;font-size:16px;color:var(--gold-light);}
+.geo-score-info::before{content:'⚜️ ';opacity:.7;}
+
+/* Photo / illustration du lieu */
+.geo-photo-wrap{position:relative;width:100%;border:2px solid rgba(201,146,42,.5);border-radius:8px;overflow:hidden;background:#000;aspect-ratio:16/9;box-shadow:0 8px 32px rgba(0,0,0,.5),inset 0 0 0 1px rgba(232,184,75,.15);}
+.geo-photo-wrap::before,.geo-photo-wrap::after{content:'';position:absolute;width:24px;height:24px;border:2px solid var(--gold-light);pointer-events:none;z-index:5;opacity:.8;}
+.geo-photo-wrap::before{top:6px;left:6px;border-right:none;border-bottom:none;}
+.geo-photo-wrap::after{bottom:6px;right:6px;border-left:none;border-top:none;}
+.geo-photo{width:100%;height:100%;object-fit:cover;display:block;}
+.geo-photo-illu{width:100%;height:100%;display:block;}
+.geo-photo-label{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.75);padding:5px 14px;border-radius:3px;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-pale);border:1px solid rgba(201,146,42,.4);z-index:6;}
+.geo-hint{margin-top:8px;text-align:center;font-style:italic;color:rgba(245,217,138,.7);font-size:13px;line-height:1.5;}
+.geo-hint::before{content:'💡 ';font-style:normal;opacity:.7;}
+
+/* Carte du parc */
+.geo-map-section{margin-top:18px;}
+.geo-map-title{text-align:center;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);opacity:.85;margin-bottom:8px;}
+.geo-map-wrap{position:relative;width:100%;border:2px solid rgba(201,146,42,.5);border-radius:8px;overflow:hidden;background:#1A1108;cursor:crosshair;box-shadow:0 8px 32px rgba(0,0,0,.5);aspect-ratio:1/1;}
+.geo-map-wrap.disabled{cursor:default;}
+.geo-map-svg{width:100%;height:100%;display:block;user-select:none;}
+.geo-map-svg .place-marker{cursor:pointer;}
+.geo-map-svg .place-dot{transition:r .2s, fill .2s;}
+.geo-map-svg .place-marker:hover .place-dot{r:4;fill:var(--gold-light);}
+.geo-map-svg .place-label{font-family:'EB Garamond',serif;font-size:10px;fill:var(--gold-pale);opacity:0;transition:opacity .2s;pointer-events:none;}
+.geo-map-svg .place-marker:hover .place-label{opacity:1;}
+/* Indicateurs visuels */
+.geo-map-svg .my-guess{filter:drop-shadow(0 0 6px rgba(232,184,75,.8));animation:guessPulse 1.4s ease-in-out infinite;}
+.geo-map-svg .real-place{filter:drop-shadow(0 0 8px rgba(229,57,53,.7));}
+@keyframes guessPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+
+/* Hint d'utilisation au-dessus de la carte */
+.geo-map-hint{text-align:center;font-size:12px;color:var(--gold-pale);margin-bottom:6px;font-family:'Cinzel',serif;letter-spacing:.06em;opacity:.85;}
+
+/* Bouton confirm */
+.geo-confirm-row{margin-top:14px;text-align:center;}
+.geo-confirm-row .btn-primary{min-width:240px;}
+.geo-confirm-row .btn-primary:disabled{opacity:.45;}
+
+/* Reveal panel */
+.geo-reveal{margin-top:14px;padding:16px;background:linear-gradient(135deg,rgba(40,28,12,.9),rgba(20,14,6,.95));border:1px solid rgba(201,146,42,.5);border-radius:8px;animation:revealIn .5s cubic-bezier(.2,1.2,.4,1);}
+@keyframes revealIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.geo-reveal h3{font-family:'Cinzel Decorative',cursive;color:var(--gold-light);text-align:center;font-size:18px;margin-bottom:6px;letter-spacing:.05em;}
+.geo-reveal-stats{display:flex;justify-content:space-around;margin:14px 0;flex-wrap:wrap;gap:10px;}
+.geo-reveal-stat{text-align:center;flex:1;min-width:90px;}
+.geo-reveal-stat .v{font-family:'Cinzel Decorative',cursive;font-size:24px;color:var(--gold-light);line-height:1;}
+.geo-reveal-stat .l{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,217,138,.6);font-family:'Cinzel',serif;margin-top:4px;}
+.geo-reveal-stat.score-final .v{color:#a5d6a7;font-size:34px;}
+.geo-reveal-desc{margin-top:10px;font-size:13px;line-height:1.7;color:var(--parchment2);text-align:justify;padding:10px;background:rgba(0,0,0,.3);border-radius:4px;border-left:3px solid var(--gold);}
+
+/* End screen */
+.geo-end-summary{padding:16px;background:rgba(0,0,0,.35);border-radius:6px;margin:12px 0;}
+.geo-end-row{display:grid;grid-template-columns:30px 1fr auto auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px dashed rgba(201,146,42,.15);font-size:13px;}
+.geo-end-row:last-child{border-bottom:none;}
+.geo-end-row .geo-end-num{font-family:'Cinzel Decorative',cursive;color:var(--gold);font-size:16px;}
+.geo-end-row .geo-end-name{color:var(--parchment2);}
+.geo-end-row .geo-end-dist{font-size:11px;color:rgba(245,217,138,.5);font-family:'Cinzel',serif;letter-spacing:.04em;}
+.geo-end-row .geo-end-pts{font-family:'Cinzel Decorative',cursive;color:var(--gold-light);font-weight:700;min-width:60px;text-align:right;}
+
+/* Layout horizontal sur écrans larges */
+@media(min-width:900px){
+  .geo-game-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start;}
+  .geo-map-section{margin-top:0;}
+}
 </style>
 </head>
 <body>
@@ -602,6 +688,7 @@ input,textarea{cursor:text;}
   </div>
   <button class="menu-item" onclick="navTo('home');closeMenu()"><span class="ico">🏠</span> Accueil</button>
   <button class="menu-item" onclick="navTo('quiz-setup');closeMenu()"><span class="ico">⚔️</span> Lancer un quiz</button>
+  <button class="menu-item" onclick="navTo('geo-setup');closeMenu()"><span class="ico">🗺️</span> Le Pisteur</button>
   <button class="menu-item" onclick="navTo('leaderboard');closeMenu()"><span class="ico">🏆</span> Classement</button>
   <button class="menu-item" onclick="navTo('profile');closeMenu()"><span class="ico">👤</span> Mon profil</button>
   <div class="menu-divider"></div>
@@ -631,13 +718,12 @@ input,textarea{cursor:text;}
     <div id="formLogin">
       <p class="card-text">Connectez-vous pour rejoindre le classement, gagner de l'XP et conserver vos statistiques sur tous vos appareils.</p>
       <button class="btn-google" onclick="loginWithGoogle()">
-        <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+        <span class="g-logo"><svg width="14" height="14" viewBox="0 0 18 18" aria-hidden="true">
           <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/>
           <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
           <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
           <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
-        </svg>
-        <span>Continuer avec Google</span>
+        </svg></span><span>Continuer avec Google</span>
       </button>
       <div class="auth-divider"><span>OU</span></div>
       <div class="form-group">
@@ -660,13 +746,12 @@ input,textarea{cursor:text;}
     <div id="formRegister" style="display:none">
       <p class="card-text">Créez votre compte de Chevalier. Vos données seront synchronisées sur tous vos appareils.</p>
       <button class="btn-google" onclick="loginWithGoogle()">
-        <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+        <span class="g-logo"><svg width="14" height="14" viewBox="0 0 18 18" aria-hidden="true">
           <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/>
           <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/>
           <path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/>
           <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
-        </svg>
-        <span>S'inscrire avec Google</span>
+        </svg></span><span>S'inscrire avec Google</span>
       </button>
       <div class="auth-divider"><span>OU</span></div>
       <div class="form-group">
@@ -712,6 +797,7 @@ input,textarea{cursor:text;}
     </div>
     <div class="btn-row">
       <button class="btn-primary" onclick="navTo('quiz-setup')">⚔️ Lancer un quiz</button>
+      <button class="btn-primary" onclick="navTo('geo-setup')" style="background:linear-gradient(135deg,#5C4033,#A0522D 40%,#D2691E 60%,#A0522D);">🗺️ Le Pisteur</button>
       <button class="btn-secondary" onclick="navTo('leaderboard')">🏆 Classement</button>
       <button class="btn-secondary" onclick="navTo('profile')">👤 Mon profil</button>
     </div>
@@ -837,6 +923,99 @@ input,textarea{cursor:text;}
       <button class="btn-primary" onclick="navTo('quiz-setup')">🔄 Nouvelle série</button>
       <button class="btn-secondary" onclick="generateShareCard()">📤 Partager</button>
       <button class="btn-secondary" onclick="navTo('leaderboard')">🏆 Classement</button>
+      <button class="btn-secondary" onclick="navTo('home')">🏠 Accueil</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ GEOGUESSR SETUP ════════════ -->
+<div class="screen" id="screen-geo-setup">
+  <div class="card" style="max-width:600px;margin-left:auto;margin-right:auto;">
+    <h2>🗺️ Le Pisteur du Puy du Fou</h2>
+    <p class="card-text">Une photo, une carte. À vous de retrouver où la photo a été prise dans le parc. Plus vous êtes précis, plus vous gagnez de points (jusqu'à <strong>5 000 par round</strong>).</p>
+    <div class="info-box">
+      Score parfait : <strong id="geoMaxScore">25 000</strong> points · Une partie ≈ <strong id="geoTimeEstim">5 min</strong>
+    </div>
+    <div class="form-group">
+      <label>Nombre de rounds</label>
+      <div class="rounds-grid">
+        <div class="rounds-card" data-rounds="3" onclick="selectRounds(3)">
+          <div class="r-num">3</div>
+          <div class="r-lbl">Court</div>
+          <div class="r-time">≈ 3 min</div>
+        </div>
+        <div class="rounds-card sel" data-rounds="5" onclick="selectRounds(5)">
+          <div class="r-num">5</div>
+          <div class="r-lbl">Standard</div>
+          <div class="r-time">≈ 5 min</div>
+        </div>
+        <div class="rounds-card" data-rounds="10" onclick="selectRounds(10)">
+          <div class="r-num">10</div>
+          <div class="r-lbl">Long</div>
+          <div class="r-time">≈ 10 min</div>
+        </div>
+      </div>
+    </div>
+    <div class="info-box" style="text-align:left;font-size:12px;">
+      <strong>📜 Comment jouer :</strong><br>
+      • Une photo d'un lieu du parc s'affiche<br>
+      • Cliquez sur la carte pour deviner où elle a été prise<br>
+      • Validez votre choix → le vrai lieu est révélé<br>
+      • Plus vous êtes proche, plus vous gagnez de points
+    </div>
+    <div class="btn-row">
+      <button class="btn-secondary" onclick="navTo('home')">← Retour</button>
+      <button class="btn-primary" onclick="startGeoGame()">Commencer 🗺️</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ GEOGUESSR GAME ════════════ -->
+<div class="screen" id="screen-geo-game">
+  <div class="card geo-screen">
+    <div class="geo-topbar">
+      <div class="geo-round-info">Round <strong id="geoRoundNum">1</strong> / <strong id="geoRoundTotal">5</strong></div>
+      <div class="geo-score-info"><span id="geoScoreNum">0</span> pts</div>
+    </div>
+    <div class="geo-game-grid">
+      <div>
+        <div class="geo-photo-wrap" id="geoPhotoWrap">
+          <!-- Illustration SVG ou img injectée par JS -->
+        </div>
+        <div class="geo-hint" id="geoHintText">Indice...</div>
+      </div>
+      <div class="geo-map-section">
+        <div class="geo-map-title">Carte du Grand Parc</div>
+        <div class="geo-map-hint" id="geoMapHint">Cliquez sur la carte où vous pensez que la photo a été prise</div>
+        <div class="geo-map-wrap" id="geoMapWrap">
+          <!-- SVG carte injectée par JS -->
+        </div>
+        <div class="geo-confirm-row">
+          <button class="btn-primary" id="geoConfirmBtn" onclick="confirmGeoGuess()" disabled>📍 Confirmer ma position</button>
+        </div>
+      </div>
+    </div>
+    <div id="geoReveal"></div>
+  </div>
+</div>
+
+<!-- ════════════ GEOGUESSR END ════════════ -->
+<div class="screen" id="screen-geo-end">
+  <div class="card">
+    <div class="results-hero">
+      <div class="trophy" id="geoEndTrophy">🗺️</div>
+      <div class="results-grade" id="geoEndGrade">Pisteur</div>
+      <div class="results-score" id="geoEndScore">0 / 25 000</div>
+      <div class="results-message" id="geoEndMessage">Bravo !</div>
+    </div>
+    <div class="result-stats">
+      <div class="result-stat"><div class="v" id="geoEndPct">0%</div><div class="l">Précision</div></div>
+      <div class="result-stat"><div class="v" id="geoEndAvgDist">0</div><div class="l">Distance moyenne</div></div>
+      <div class="result-stat"><div class="v" id="geoEndXp">0</div><div class="l">XP gagnée</div></div>
+    </div>
+    <div class="geo-end-summary" id="geoEndSummary"></div>
+    <div class="btn-row">
+      <button class="btn-primary" onclick="navTo('geo-setup')">🔄 Rejouer</button>
       <button class="btn-secondary" onclick="navTo('home')">🏠 Accueil</button>
     </div>
   </div>
@@ -1349,6 +1528,9 @@ const ACHIEVEMENTS=[
   {id:'daily_7',ico:'🗓️',name:'Hebdomadaire',desc:'Jouer 7 jours d\'affilée',check:u=>(u.dailyStreak||0)>=7},
   {id:'speed_demon',ico:'⚡',name:'Éclair',desc:'10 réponses en moins de 5s',check:u=>(u._fastAnswers||0)>=10},
   {id:'legend',ico:'⚜️',name:'Légende',desc:'Atteindre le grade Légende',check:u=>u.xp>=55000},
+  {id:'geo_first',ico:'🗺️',name:'Premier Pisteur',desc:'Terminer une partie du Pisteur',check:u=>(u.geoBestScore||0)>0},
+  {id:'geo_eagle',ico:'🦅',name:'Œil d\'Aigle',desc:'Score 4 500+ sur une partie de 5 rounds',check:u=>(u.geoBestScore||0)>=22500},
+  {id:'geo_master',ico:'🧭',name:'Maître Cartographe',desc:'Score 9 000+ sur une partie de 10 rounds',check:u=>(u.geoBestScore||0)>=45000},
 ];
 
 /* ══════════════════ CITATIONS ══════════════════ */
@@ -1365,7 +1547,80 @@ const CITATIONS=[
   {t:"Honneur et fidélité.",a:"Devise des Mousquetaires"},
 ];
 
-/* ══════════════════ STATE GAME ══════════════════ */
+/* ══════════════════ GEOGUESSR : LIEUX DU PUY DU FOU ══════════════════ */
+/* Coordonnées en pourcentage sur la carte stylisée (0-100) — pas les vraies GPS */
+/* Les coordonnées sont approximatives, organisées de façon cohérente sur la carte stylisée */
+const PARK_PLACES=[
+  {id:'cinescenie',name:'La Cinéscénie',x:50,y:32,
+   ico:'🎭',color:'#E8B84B',
+   desc:'Le plus grand spectacle de nuit du monde. Joué depuis 1978 devant le château en ruine, il rassemble 2 550 acteurs sur une scène de 23 hectares et raconte l\'histoire de la Vendée à travers la famille Maupillier.',
+   hint:'Au cœur du domaine, devant les ruines du vieux château'},
+  {id:'chateau',name:'Le Château du Puy du Fou',x:48,y:36,
+   ico:'🏰',color:'#C9922A',
+   desc:'Château Renaissance du XVe siècle, classé monument historique. Il sert de toile de fond grandiose à la Cinéscénie et abrite désormais le spectacle "La Renaissance du Château".',
+   hint:'Le bâtiment historique qui a donné son nom au parc'},
+  {id:'vikings',name:'Les Vikings',x:32,y:55,
+   ico:'⚔️',color:'#5E4A2F',
+   desc:'L\'attaque du Fort de l\'An Mil par les guerriers du Nord. Drakkars surgissant de l\'eau, combats spectaculaires et effets pyrotechniques. Créé en 2003.',
+   hint:'Au bord de l\'eau, à l\'ouest du parc, un fort fortifié'},
+  {id:'mousquetaire',name:'Le Mousquetaire de Richelieu',x:62,y:60,
+   ico:'🤺',color:'#8B0000',
+   desc:'Cape et épée dans le Grand Carrousel. Cavaliers, danseurs flamenco, escrime et cascades dans une mise en scène somptueuse digne du XVIIe siècle.',
+   hint:'Tribune couverte, dans le sud-est du parc'},
+  {id:'signe',name:'Le Signe du Triomphe',x:30,y:35,
+   ico:'🏛️',color:'#B8860B',
+   desc:'Course de chars, gladiateurs et fauves dans un Stadium Gallo-Romain monumental de 6 000 places. Élu Meilleure Création d\'Europe en 2022.',
+   hint:'Imposant amphithéâtre romain au nord-ouest'},
+  {id:'oiseaux',name:'Le Bal des Oiseaux Fantômes',x:68,y:42,
+   ico:'🦅',color:'#4A6741',
+   desc:'Ballet aérien unique au monde de plus de 300 oiseaux de proie : aigles, vautours, faucons, hiboux. Dans le décor d\'un château en ruine.',
+   hint:'Tribune en arc de cercle, à l\'est du parc'},
+  {id:'panache',name:'Le Dernier Panache',x:55,y:70,
+   ico:'⚓',color:'#2C3E50',
+   desc:'L\'épopée du Chevalier de Charette, dans le théâtre tournant de 2 400 places. Mer démontée, batailles navales et tribunes mobiles.',
+   hint:'Bâtiment circulaire au sud du parc'},
+  {id:'arthur',name:'L\'Épée du Roi Arthur',x:40,y:75,
+   ico:'🗡️',color:'#1F3A5F',
+   desc:'Nouveauté 2025. Le jeune Tristan affronte les épreuves les plus périlleuses pour délivrer Excalibur et sauver le roi Arthur emprisonné par un sortilège.',
+   hint:'Au sud, près du lac, dans un grand décor enchanté'},
+  {id:'mime',name:'Le Mime et l\'Étoile',x:70,y:30,
+   ico:'🎬',color:'#E0C9A6',
+   desc:'Élu Meilleur Spectacle du Monde en 2024. Une romance dans le Hollywood des années 1920, mêlant cinéma muet, danse et numéros aériens.',
+   hint:'Théâtre couvert dans le nord-est du parc'},
+  {id:'perouse',name:'Le Mystère de La Pérouse',x:25,y:72,
+   ico:'⛵',color:'#1B4F72',
+   desc:'Spectacle immersif. Embarquez sur la Boussole et l\'Astrolabe pour suivre l\'expédition du célèbre navigateur français autour du monde, jusqu\'au naufrage.',
+   hint:'Attraction immersive au sud-ouest, près de l\'eau'},
+  {id:'verdun',name:'Les Amoureux de Verdun',x:78,y:58,
+   ico:'🌹',color:'#5D4037',
+   desc:'Plongez dans une tranchée de la Première Guerre mondiale et suivez les lettres d\'amour entre le soldat Louis et sa fiancée. Émotion garantie.',
+   hint:'Parcours immersif à l\'est, dans un décor de tranchées'},
+  {id:'bourg18',name:'Le Bourg 1900',x:50,y:48,
+   ico:'🎪',color:'#A0522D',
+   desc:'Village de la Belle Époque avec sa place pavée, ses devantures fleuries, son tramway, ses échoppes et boulangerie. Manège de chevaux de bois en plein centre.',
+   hint:'Village d\'époque au centre du parc'},
+  {id:'noces',name:'Les Noces de Feu',x:42,y:50,
+   ico:'🔥',color:'#FF6B35',
+   desc:'Spectacle nocturne sur le vieux lac. Mariage féerique de la Muse Violoniste et du Pianiste Virtuose, dans une chorégraphie d\'eau, de feu et de lumière.',
+   hint:'Au bord du grand lac, au cœur du parc'},
+  {id:'fontaine',name:'Le Monde Imaginaire de La Fontaine',x:58,y:52,
+   ico:'🦊',color:'#7B9E89',
+   desc:'Promenade enchantée dans les Fables. Animaux animatroniques grandeur nature, automates musiciens, fontaines musicales et ornements baroques.',
+   hint:'Parcours nature au centre-est du parc'},
+];
+
+/* ══════════════════ GEOGUESSR : ÉTAT JEU ══════════════════ */
+let geoGame={
+  rounds:5, // 3, 5 ou 10
+  currentRound:0,
+  places:[],   // Tirés au hasard pour la partie
+  guesses:[],  // Pour chaque round : {placeId, guessX, guessY, distance, score}
+  totalScore:0,
+  guessX:null, guessY:null, // Position du clic en cours
+  state:'idle', // 'idle', 'guessing', 'reveal', 'finished'
+};
+
+/* ══════════════════ STATE GAME (quiz classique) ══════════════════ */
 let game={mode:'classic',questions:[],idx:0,score:0,correct:0,streak:0,bestStreakSession:0,timer:null,timeLeft:30,locked:false,lastDiff:'all',recap:[],fastCount:0,timerMax:30,sizeWanted:15};
 let SOUND_ON=localStorage.getItem('pdf_sound_v1')!=='0';
 
@@ -1520,6 +1775,7 @@ function ensureUserShape(u){
   if(typeof u._fastAnswers!=='number')u._fastAnswers=0;
   if(typeof u._perfect!=='boolean')u._perfect=false;
   if(!Array.isArray(u.titles))u.titles=[];
+  if(typeof u.geoBestScore!=='number')u.geoBestScore=0;
   return u;
 }
 
@@ -1631,6 +1887,7 @@ function navTo(screen){
   if(screen==='leaderboard')renderLeaderboard();
   if(screen==='profile')renderProfile();
   if(screen==='admin')renderAdmin();
+  if(screen==='geo-setup')refreshGeoSetup();
 }
 function goHome(){if(getSession())navTo('home');}
 
@@ -2178,6 +2435,368 @@ function showResults(){
 }
 function getGradeForXp(xp){let g=GRADES[0];for(const gr of GRADES){if(xp>=gr.min)g=gr;}return g;}
 function getGradeForScore(s){return getGradeForXp(s);}
+
+/* ══════════════════════════════════════════════════════════════ */
+/* ════════════════════ MODE GEOGUESSR ══════════════════════════ */
+/* ══════════════════════════════════════════════════════════════ */
+
+function refreshGeoSetup(){
+  // Met à jour les estimations selon le nombre de rounds
+  const r=geoGame.rounds;
+  document.getElementById('geoMaxScore').textContent=(r*5000).toLocaleString('fr-FR');
+  document.getElementById('geoTimeEstim').textContent=r+' min';
+}
+function selectRounds(n){
+  geoGame.rounds=n;
+  document.querySelectorAll('.rounds-card').forEach(c=>c.classList.toggle('sel',parseInt(c.dataset.rounds,10)===n));
+  refreshGeoSetup();
+  sndClick();
+}
+
+/* ─── Carte SVG du parc (dessinée en style parchemin médiéval) ─── */
+function buildParkMapSVG(opts={}){
+  // opts: showAll (bool), guess {x,y}, real {x,y}, currentPlace
+  const {showAll=false,guess=null,real=null,currentPlace=null}=opts;
+  const w=500,h=500;
+  let svg=`<svg class="geo-map-svg" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" id="geoMapSvg">
+    <defs>
+      <radialGradient id="parchGrad" cx="50%" cy="50%" r="60%">
+        <stop offset="0%" stop-color="#3a2810"/>
+        <stop offset="100%" stop-color="#1a0e04"/>
+      </radialGradient>
+      <pattern id="parchTexture" width="100" height="100" patternUnits="userSpaceOnUse">
+        <rect width="100" height="100" fill="url(#parchGrad)"/>
+        <circle cx="20" cy="30" r=".5" fill="rgba(232,184,75,.15)"/>
+        <circle cx="70" cy="60" r=".4" fill="rgba(232,184,75,.1)"/>
+        <circle cx="45" cy="85" r=".6" fill="rgba(232,184,75,.18)"/>
+      </pattern>
+      <filter id="goldGlow"><feGaussianBlur stdDeviation="1.5"/></filter>
+    </defs>
+    <!-- Fond parchemin -->
+    <rect width="${w}" height="${h}" fill="url(#parchTexture)"/>
+    <!-- Bordure ornementale -->
+    <rect x="6" y="6" width="${w-12}" height="${h-12}" fill="none" stroke="rgba(201,146,42,.45)" stroke-width="1" stroke-dasharray="4 3"/>
+    <rect x="14" y="14" width="${w-28}" height="${h-28}" fill="none" stroke="rgba(201,146,42,.25)" stroke-width=".7"/>
+    <!-- Coins fleurdelisés -->
+    <g fill="rgba(232,184,75,.55)">
+      <text x="14" y="26" font-family="serif" font-size="18">⚜</text>
+      <text x="${w-30}" y="26" font-family="serif" font-size="18">⚜</text>
+      <text x="14" y="${h-12}" font-family="serif" font-size="18">⚜</text>
+      <text x="${w-30}" y="${h-12}" font-family="serif" font-size="18">⚜</text>
+    </g>
+    <!-- Boussole en haut-droit -->
+    <g transform="translate(${w-50},50)">
+      <circle r="22" fill="rgba(0,0,0,.4)" stroke="rgba(201,146,42,.5)" stroke-width="1"/>
+      <path d="M0 -18 L4 -2 L0 0 L-4 -2 Z" fill="#E8B84B"/>
+      <path d="M0 18 L4 2 L0 0 L-4 2 Z" fill="rgba(201,146,42,.4)"/>
+      <text y="-7" text-anchor="middle" font-family="serif" font-size="9" fill="#F5D98A" font-weight="bold">N</text>
+    </g>
+    <!-- Lac central (zone d'eau, élément emblématique) -->
+    <ellipse cx="220" cy="260" rx="55" ry="32" fill="rgba(70,130,180,.35)" stroke="rgba(135,206,235,.4)" stroke-width="1"/>
+    <ellipse cx="220" cy="260" rx="48" ry="27" fill="none" stroke="rgba(135,206,235,.3)" stroke-width=".5" stroke-dasharray="2 2"/>
+    <text x="220" y="263" text-anchor="middle" font-family="serif" font-size="9" fill="rgba(232,184,75,.45)" font-style="italic">Le Vieux Lac</text>
+    <!-- Forêt symbolisée (3 zones) -->
+    <g opacity=".5">
+      <path d="M 60 380 Q 80 360 100 380 Q 120 360 140 380 Q 130 400 100 405 Q 70 400 60 380 Z" fill="rgba(74,103,65,.5)" stroke="rgba(74,103,65,.6)" stroke-width="1"/>
+      <path d="M 380 350 Q 410 330 440 355 Q 445 380 415 390 Q 380 385 380 350 Z" fill="rgba(74,103,65,.4)" stroke="rgba(74,103,65,.5)" stroke-width="1"/>
+      <path d="M 350 80 Q 380 60 410 85 Q 415 110 385 120 Q 350 115 350 80 Z" fill="rgba(74,103,65,.4)" stroke="rgba(74,103,65,.5)" stroke-width="1"/>
+    </g>
+    <!-- Chemins/sentiers stylisés -->
+    <g fill="none" stroke="rgba(201,146,42,.2)" stroke-width="1.2" stroke-dasharray="3 4">
+      <path d="M 250 80 Q 250 200 250 320 Q 250 420 250 480"/>
+      <path d="M 80 250 Q 200 250 320 250 Q 420 250 480 250"/>
+      <path d="M 100 100 Q 200 200 300 300 Q 380 380 450 450"/>
+    </g>
+    <!-- Titre carte -->
+    <text x="${w/2}" y="40" text-anchor="middle" font-family="'Cinzel Decorative',cursive" font-size="14" fill="#E8B84B" font-weight="bold" letter-spacing="2" filter="url(#goldGlow)">LE GRAND PARC</text>
+    <text x="${w/2}" y="${h-20}" text-anchor="middle" font-family="'Cinzel',serif" font-size="9" fill="rgba(232,184,75,.6)" letter-spacing="3">⚜ PUY DU FOU ⚜</text>`;
+
+  // Marqueurs des lieux
+  PARK_PLACES.forEach(p=>{
+    const px=(p.x/100)*w, py=(p.y/100)*h;
+    if(showAll||(currentPlace&&p.id===currentPlace.id&&showAll)){
+      // Mode reveal — montrer tous les lieux
+      svg+=`<g class="place-marker" transform="translate(${px},${py})">
+        <circle class="place-dot" r="3" fill="${p.color}" opacity=".8"/>
+        <text class="place-label" x="6" y="3" font-family="'EB Garamond',serif" font-size="9" fill="#F5D98A" opacity=".7">${escapeHtml(p.name)}</text>
+      </g>`;
+    }else{
+      // Mode jeu — petits points discrets
+      svg+=`<circle cx="${px}" cy="${py}" r="1.5" fill="rgba(201,146,42,.25)"/>`;
+    }
+  });
+
+  // Le vrai lieu (drapeau rouge)
+  if(real){
+    const rx=(real.x/100)*w, ry=(real.y/100)*h;
+    svg+=`<g class="real-place" transform="translate(${rx},${ry})">
+      <line x1="0" y1="0" x2="0" y2="-22" stroke="#fff" stroke-width="1.5"/>
+      <path d="M 0 -22 L 14 -18 L 0 -14 Z" fill="#e53935" stroke="#fff" stroke-width=".8"/>
+      <circle r="3" fill="#e53935" stroke="#fff" stroke-width="1.2"/>
+    </g>`;
+  }
+  // La supposition de l'utilisateur (étoile dorée)
+  if(guess){
+    const gx=(guess.x/100)*w, gy=(guess.y/100)*h;
+    svg+=`<g class="my-guess" transform="translate(${gx},${gy})">
+      <path d="M 0 -10 L 2.5 -3 L 10 -3 L 4 1.5 L 6.5 8.5 L 0 4.5 L -6.5 8.5 L -4 1.5 L -10 -3 L -2.5 -3 Z" fill="#E8B84B" stroke="#8B5E0A" stroke-width="1"/>
+    </g>`;
+  }
+  // Ligne entre les deux
+  if(guess&&real){
+    const gx=(guess.x/100)*w, gy=(guess.y/100)*h;
+    const rx=(real.x/100)*w, ry=(real.y/100)*h;
+    svg+=`<line x1="${gx}" y1="${gy}" x2="${rx}" y2="${ry}" stroke="rgba(232,184,75,.6)" stroke-width="1.5" stroke-dasharray="4 3"/>`;
+  }
+
+  svg+='</svg>';
+  return svg;
+}
+
+/* ─── Illustration SVG du lieu (placeholder stylisé) ─── */
+function buildPlaceIllustration(place){
+  // Illustration unique pour chaque lieu basée sur son icône et sa couleur dominante
+  const c=place.color;
+  return `<svg class="geo-photo-illu" viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="bgIllu_${place.id}" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#1a0e04"/>
+        <stop offset="40%" stop-color="${c}" stop-opacity=".7"/>
+        <stop offset="100%" stop-color="#0d0a06"/>
+      </linearGradient>
+      <radialGradient id="spotIllu_${place.id}" cx="50%" cy="40%" r="60%">
+        <stop offset="0%" stop-color="${c}" stop-opacity=".5"/>
+        <stop offset="100%" stop-color="transparent"/>
+      </radialGradient>
+    </defs>
+    <rect width="800" height="450" fill="url(#bgIllu_${place.id})"/>
+    <rect width="800" height="450" fill="url(#spotIllu_${place.id})"/>
+    <!-- Particules d'ambiance -->
+    <g opacity=".5">
+      <circle cx="120" cy="80" r="2" fill="#E8B84B"/>
+      <circle cx="250" cy="120" r="1.5" fill="#F5D98A"/>
+      <circle cx="450" cy="60" r="2.5" fill="#E8B84B"/>
+      <circle cx="650" cy="100" r="1.5" fill="#F5D98A"/>
+      <circle cx="700" cy="180" r="2" fill="#E8B84B"/>
+      <circle cx="180" cy="200" r="1" fill="#F5D98A"/>
+      <circle cx="550" cy="220" r="1.8" fill="#E8B84B"/>
+    </g>
+    <!-- Icône centrale géante -->
+    <text x="400" y="240" text-anchor="middle" font-size="160" filter="drop-shadow(0 0 20px rgba(232,184,75,.4))">${place.ico}</text>
+    <!-- Label nom -->
+    <text x="400" y="340" text-anchor="middle" font-family="'Cinzel Decorative',cursive" font-size="36" fill="#F5D98A" font-weight="bold" letter-spacing="3" filter="drop-shadow(0 2px 8px rgba(0,0,0,.6))">${escapeHtml(place.name)}</text>
+    <text x="400" y="385" text-anchor="middle" font-family="'Cinzel',serif" font-size="13" fill="rgba(232,184,75,.7)" letter-spacing="6">⚜  PUY DU FOU  ⚜</text>
+    <!-- Bordure intérieure stylée -->
+    <rect x="20" y="20" width="760" height="410" fill="none" stroke="rgba(232,184,75,.3)" stroke-width="1" stroke-dasharray="6 4"/>
+  </svg>`;
+}
+
+/* ─── Démarrer une partie ─── */
+function startGeoGame(){
+  const u=currentUser();if(!u)return;
+  // Tirer N lieux au hasard sans répétition
+  const pool=[...PARK_PLACES];
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
+  geoGame.places=pool.slice(0,Math.min(geoGame.rounds,pool.length));
+  geoGame.currentRound=0;
+  geoGame.guesses=[];
+  geoGame.totalScore=0;
+  geoGame.guessX=null;geoGame.guessY=null;
+  geoGame.state='guessing';
+  navTo('geo-game');
+  audioCtx(); // wakeup
+  renderGeoRound();
+}
+
+/* ─── Afficher un round ─── */
+function renderGeoRound(){
+  const place=geoGame.places[geoGame.currentRound];
+  if(!place){endGeoGame();return;}
+  geoGame.guessX=null;geoGame.guessY=null;geoGame.state='guessing';
+  document.getElementById('geoRoundNum').textContent=geoGame.currentRound+1;
+  document.getElementById('geoRoundTotal').textContent=geoGame.rounds;
+  document.getElementById('geoScoreNum').textContent=geoGame.totalScore.toLocaleString('fr-FR');
+  // Photo / illustration du lieu
+  const photoWrap=document.getElementById('geoPhotoWrap');
+  photoWrap.innerHTML=buildPlaceIllustration(place);
+  // Indice (caché en mode hardcore plus tard si on veut)
+  document.getElementById('geoHintText').textContent=place.hint;
+  // Carte avec les marqueurs vides
+  const mapWrap=document.getElementById('geoMapWrap');
+  mapWrap.classList.remove('disabled');
+  mapWrap.innerHTML=buildParkMapSVG();
+  mapWrap.onclick=onGeoMapClick;
+  // Bouton confirm
+  const btn=document.getElementById('geoConfirmBtn');
+  btn.disabled=true;btn.style.display='inline-flex';
+  btn.textContent='📍 Confirmer ma position';
+  // Reset reveal
+  document.getElementById('geoReveal').innerHTML='';
+  // Hint message
+  document.getElementById('geoMapHint').textContent='Cliquez sur la carte où vous pensez que la photo a été prise';
+}
+
+/* ─── Click sur la carte ─── */
+function onGeoMapClick(ev){
+  if(geoGame.state!=='guessing')return;
+  const wrap=document.getElementById('geoMapWrap');
+  const rect=wrap.getBoundingClientRect();
+  const x=((ev.clientX-rect.left)/rect.width)*100;
+  const y=((ev.clientY-rect.top)/rect.height)*100;
+  if(x<0||x>100||y<0||y>100)return;
+  geoGame.guessX=x;geoGame.guessY=y;
+  // Re-render avec le marqueur étoile
+  const mapWrap=document.getElementById('geoMapWrap');
+  mapWrap.innerHTML=buildParkMapSVG({guess:{x,y}});
+  mapWrap.onclick=onGeoMapClick;
+  document.getElementById('geoConfirmBtn').disabled=false;
+  document.getElementById('geoMapHint').textContent='Vous pouvez recliquer pour ajuster, puis cliquez sur "Confirmer"';
+  sndClick();
+}
+
+/* ─── Confirmer la supposition ─── */
+function confirmGeoGuess(){
+  if(geoGame.state!=='guessing'||geoGame.guessX===null)return;
+  const place=geoGame.places[geoGame.currentRound];
+  // Distance euclidienne en % (équivalent en mètres : 1% ≈ 5m sur ~500m de parc estimé)
+  const dx=geoGame.guessX-place.x;
+  const dy=geoGame.guessY-place.y;
+  const distPct=Math.sqrt(dx*dx+dy*dy);
+  // Conversion en "mètres" approximatifs (le parc fait environ 60 hectares, soit ~750m de côté)
+  const distMeters=Math.round(distPct*7.5);
+  // Score : exponentiel décroissant. 0% distance = 5000 pts, 70% = 0 pts
+  // Formule : score = 5000 * exp(-distPct/15) — plus la distance est faible, plus le score est haut
+  let roundScore=0;
+  if(distPct<=2)roundScore=5000;
+  else if(distPct<=5)roundScore=Math.round(5000-((distPct-2)/3)*500); // 5000 → 4500
+  else if(distPct<=15)roundScore=Math.round(4500-((distPct-5)/10)*2000); // 4500 → 2500
+  else if(distPct<=30)roundScore=Math.round(2500-((distPct-15)/15)*1800); // 2500 → 700
+  else if(distPct<=50)roundScore=Math.round(700-((distPct-30)/20)*600); // 700 → 100
+  else roundScore=Math.max(0,Math.round(100-(distPct-50)*5));
+
+  geoGame.guesses.push({placeId:place.id,guessX:geoGame.guessX,guessY:geoGame.guessY,distance:distMeters,score:roundScore});
+  geoGame.totalScore+=roundScore;
+  geoGame.state='reveal';
+
+  // Animation de la carte avec les 2 marqueurs
+  const mapWrap=document.getElementById('geoMapWrap');
+  mapWrap.classList.add('disabled');
+  mapWrap.onclick=null;
+  mapWrap.innerHTML=buildParkMapSVG({guess:{x:geoGame.guessX,y:geoGame.guessY},real:{x:place.x,y:place.y},showAll:true,currentPlace:place});
+
+  // Sons selon précision
+  if(distPct<=5){burstConfetti(40);sndStreak();}
+  else if(distPct<=15){burstConfetti(15);sndCorrect();}
+  else if(distPct<=30)sndCorrect();
+  else sndWrong();
+
+  // Mettre à jour le score affiché avec animation
+  const scoreEl=document.getElementById('geoScoreNum');
+  const oldScore=geoGame.totalScore-roundScore;
+  animateNumber(scoreEl,oldScore,geoGame.totalScore,700);
+
+  // Afficher le panneau de révélation
+  const ratingEmoji=distPct<=5?'🎯':distPct<=15?'🎉':distPct<=30?'👍':distPct<=50?'😬':'❌';
+  const ratingText=distPct<=5?'Bullseye !':distPct<=15?'Excellent !':distPct<=30?'Bien':distPct<=50?'Approximatif':'Loin du compte';
+
+  document.getElementById('geoReveal').innerHTML=`
+    <div class="geo-reveal">
+      <h3>${ratingEmoji} ${ratingText}</h3>
+      <p style="text-align:center;color:var(--gold-pale);font-size:14px;">C'était : <strong style="color:var(--gold-light);font-family:'Cinzel Decorative',cursive;font-size:18px;">${escapeHtml(place.name)}</strong></p>
+      <div class="geo-reveal-stats">
+        <div class="geo-reveal-stat"><div class="v">${distMeters} m</div><div class="l">Distance</div></div>
+        <div class="geo-reveal-stat score-final"><div class="v">+${roundScore.toLocaleString('fr-FR')}</div><div class="l">Points</div></div>
+        <div class="geo-reveal-stat"><div class="v">${Math.round((roundScore/5000)*100)}%</div><div class="l">Précision</div></div>
+      </div>
+      <div class="geo-reveal-desc">${escapeHtml(place.desc)}</div>
+      <div class="btn-row" style="margin-top:14px;">
+        ${geoGame.currentRound+1>=geoGame.rounds
+          ?'<button class="btn-primary" onclick="endGeoGame()">📜 Voir le résultat final</button>'
+          :'<button class="btn-primary" onclick="nextGeoRound()">Round suivant ⚔️</button>'}
+      </div>
+    </div>`;
+
+  // Cacher le bouton confirm
+  document.getElementById('geoConfirmBtn').style.display='none';
+}
+
+function nextGeoRound(){
+  geoGame.currentRound++;
+  renderGeoRound();
+  // Scroll en haut du screen pour bien voir la nouvelle photo
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ─── Fin de partie ─── */
+async function endGeoGame(){
+  geoGame.state='finished';
+  const u=currentUser();if(!u)return;
+  ensureUserShape(u);
+  const maxScore=geoGame.rounds*5000;
+  const pct=Math.round((geoGame.totalScore/maxScore)*100);
+  const avgDist=geoGame.guesses.length?
+    Math.round(geoGame.guesses.reduce((s,g)=>s+g.distance,0)/geoGame.guesses.length):0;
+  // XP : 5% du score (donc 25 000 pts max → 1250 XP, équilibré vs quiz)
+  const xpGained=Math.round(geoGame.totalScore*0.05);
+  // Sauvegarde dans le profil utilisateur (Firestore)
+  const oldGrade=getGradeForXp(u.xp);
+  u.xp=(u.xp||0)+xpGained;
+  u.gamesPlayed=(u.gamesPlayed||0)+1;
+  // Best geoguess score
+  if(!u.geoBestScore||geoGame.totalScore>u.geoBestScore)u.geoBestScore=geoGame.totalScore;
+  // xpHistory
+  u.xpHistory=u.xpHistory||[];
+  u.xpHistory.push({date:Date.now(),xp:u.xp,score:geoGame.totalScore,mode:'geo'});
+  if(u.xpHistory.length>30)u.xpHistory=u.xpHistory.slice(-30);
+  // Achievements
+  const newAch=checkAchievements(u);
+  const newGrade=getGradeForXp(u.xp);
+  await saveUserByName(getSession());
+
+  // Affichage
+  const trophy=pct>=90?'👑':pct>=70?'🏆':pct>=50?'🛡️':pct>=30?'⚔️':'🗺️';
+  const grade=pct>=90?'Maître Cartographe':pct>=70?'Expert Pisteur':pct>=50?'Bon Pisteur':pct>=30?'Apprenti Pisteur':'Novice du Parc';
+  const msg=pct>=90?'Vous connaissez le parc comme votre poche !'
+    :pct>=70?'Beau parcours, vous êtes un fin connaisseur.'
+    :pct>=50?'Pas mal du tout. Encore quelques visites !'
+    :pct>=30?'Encore un peu d\'entraînement.'
+    :'Le parc n\'a plus de secrets... pour les autres !';
+  document.getElementById('geoEndTrophy').textContent=trophy;
+  document.getElementById('geoEndGrade').textContent=grade;
+  document.getElementById('geoEndScore').textContent=geoGame.totalScore.toLocaleString('fr-FR')+' / '+maxScore.toLocaleString('fr-FR');
+  document.getElementById('geoEndMessage').textContent=msg;
+  document.getElementById('geoEndPct').textContent=pct+'%';
+  document.getElementById('geoEndAvgDist').textContent=avgDist+' m';
+  document.getElementById('geoEndXp').textContent='+'+xpGained;
+
+  // Récap rounds
+  let html='';
+  geoGame.guesses.forEach((g,i)=>{
+    const place=PARK_PLACES.find(p=>p.id===g.placeId);
+    const ico=place?place.ico:'📍';
+    html+=`<div class="geo-end-row">
+      <div class="geo-end-num">${i+1}</div>
+      <div class="geo-end-name">${ico} ${escapeHtml(place?place.name:'?')}</div>
+      <div class="geo-end-dist">${g.distance} m</div>
+      <div class="geo-end-pts">+${g.score.toLocaleString('fr-FR')}</div>
+    </div>`;
+  });
+  document.getElementById('geoEndSummary').innerHTML=html;
+
+  navTo('geo-end');
+
+  // Confettis pour bonne perf
+  if(pct>=70)burstConfetti(60);
+  else if(pct>=50)burstConfetti(25);
+
+  // Toasts achievements + level up (avec délai en cascade)
+  newAch.forEach((a,i)=>setTimeout(()=>showAchievementToast(a),i*900+500));
+  if(newGrade.name!==oldGrade.name&&newGrade.min>oldGrade.min){
+    setTimeout(()=>showLevelUpToast(newGrade),newAch.length*900+1000);
+  }
+
+  refreshTopbar();
+}
 
 /* ══════════════════ LEADERBOARD ══════════════════ */
 let lbTab='xp';
@@ -3100,6 +3719,13 @@ window.renderAdminUsers=renderAdminUsers;
 window.updateTitlePreview=updateTitlePreview;
 // goHome est appelé après suppression de compte
 window.goHome=function(){navTo('home');};
+// GeoGuessr
+window.refreshGeoSetup=refreshGeoSetup;
+window.selectRounds=selectRounds;
+window.startGeoGame=startGeoGame;
+window.confirmGeoGuess=confirmGeoGuess;
+window.nextGeoRound=nextGeoRound;
+window.endGeoGame=endGeoGame;
 </script>
 </body>
 </html>
