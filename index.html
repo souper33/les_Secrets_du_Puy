@@ -329,6 +329,103 @@ input,textarea{cursor:text;}
 .profile-stat .l{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,217,138,.55);margin-top:5px;}
 
 /* ════════════════════════════════════════════════════════════ */
+/* ─────────────── STATISTIQUES ÉTENDUES ─────────────────────── */
+/* ════════════════════════════════════════════════════════════ */
+
+#extendedStats{margin:18px 0;}
+.stats-section-title{font-family:'Cinzel Decorative',cursive;color:var(--gold-light);font-size:16px;text-align:center;letter-spacing:.05em;margin:0 0 14px;}
+.stats-grid-extended{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:18px;}
+.stat-card{background:linear-gradient(135deg,rgba(40,28,12,.7),rgba(20,14,6,.85));border:1px solid rgba(201,146,42,.3);border-radius:6px;padding:12px;text-align:center;transition:all .2s;}
+.stat-card:hover{border-color:rgba(232,184,75,.5);transform:translateY(-2px);box-shadow:0 4px 14px rgba(201,146,42,.2);}
+.stat-card-label{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(232,184,75,.65);margin-bottom:6px;}
+.stat-card-value{font-family:'Cinzel Decorative',cursive;font-size:28px;color:var(--gold-light);line-height:1;text-shadow:0 0 12px rgba(201,146,42,.3);}
+.stat-card-value .stat-unit{font-size:14px;color:rgba(232,184,75,.7);margin-left:1px;}
+.stat-card-meta{font-family:'EB Garamond',serif;font-size:11px;color:rgba(245,217,138,.5);margin-top:4px;font-style:italic;}
+
+.stats-modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:18px;}
+.stat-mode-block{background:rgba(0,0,0,.3);border:1px solid rgba(201,146,42,.2);border-radius:6px;padding:12px 14px;}
+.stat-mode-title{font-family:'Cinzel Decorative',cursive;font-size:14px;color:var(--gold-light);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid rgba(201,146,42,.2);text-align:center;}
+.stat-mode-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-family:'EB Garamond',serif;padding:4px 0;border-bottom:1px dashed rgba(201,146,42,.1);color:var(--parchment2);}
+.stat-mode-row:last-child{border-bottom:none;}
+.stat-mode-row strong{color:var(--gold-light);font-family:'Cinzel',serif;font-size:12px;letter-spacing:.04em;}
+
+/* ─── Charts (camembert + barres + heatmap) ─── */
+.stats-charts{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;}
+@media(max-width:680px){.stats-charts{grid-template-columns:1fr;}}
+.chart-block{background:linear-gradient(135deg,rgba(26,18,8,.85),rgba(13,10,6,.9));border:1px solid rgba(201,146,42,.25);border-radius:6px;padding:14px;}
+.chart-title{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);text-align:center;margin-bottom:10px;}
+.chart-svg{width:100%;height:auto;display:block;}
+.chart-legend{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:8px;font-size:11px;font-family:'EB Garamond',serif;color:var(--parchment2);}
+.chart-legend-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:middle;}
+
+/* Barres horizontales (difficultés) */
+.bars-chart{display:flex;flex-direction:column;gap:8px;}
+.bar-row{display:grid;grid-template-columns:60px 1fr 40px;gap:8px;align-items:center;font-size:12px;}
+.bar-label{font-family:'Cinzel',serif;letter-spacing:.04em;color:var(--gold-pale);font-size:11px;text-transform:uppercase;}
+.bar-track{position:relative;background:rgba(0,0,0,.4);border-radius:3px;height:18px;overflow:hidden;border:1px solid rgba(201,146,42,.15);}
+.bar-fill{position:absolute;top:0;left:0;height:100%;border-radius:2px;background:linear-gradient(90deg,#8B5E0A,#E8B84B);transition:width .6s cubic-bezier(.2,1.2,.4,1);box-shadow:0 0 8px rgba(232,184,75,.3);}
+.bar-fill.diff-facile{background:linear-gradient(90deg,#3a7a5f,#66bb6a);}
+.bar-fill.diff-moyen{background:linear-gradient(90deg,#5d7eb8,#90caf9);}
+.bar-fill.diff-dur{background:linear-gradient(90deg,#8e5a2b,#ffb74d);}
+.bar-fill.diff-extreme{background:linear-gradient(90deg,#7a2929,#ef5350);}
+.bar-value{font-family:'Cinzel Decorative',cursive;font-size:14px;color:var(--gold-light);text-align:right;}
+
+/* Heatmap d'activité (style GitHub) */
+.heatmap-wrap{display:flex;justify-content:center;}
+.heatmap-grid{display:grid;grid-template-columns:repeat(15,1fr);gap:3px;max-width:100%;}
+.heat-cell{aspect-ratio:1;border-radius:2px;background:rgba(232,184,75,.06);border:1px solid rgba(201,146,42,.08);transition:all .15s;cursor:default;}
+.heat-cell:hover{transform:scale(1.4);z-index:2;position:relative;border-color:var(--gold-light);}
+.heat-l1{background:rgba(232,184,75,.18);border-color:rgba(232,184,75,.15);}
+.heat-l2{background:rgba(232,184,75,.4);border-color:rgba(232,184,75,.3);}
+.heat-l3{background:rgba(232,184,75,.65);border-color:rgba(232,184,75,.45);}
+.heat-l4{background:linear-gradient(135deg,#C9922A,#E8B84B);border-color:var(--gold-light);box-shadow:0 0 4px rgba(232,184,75,.3);}
+.heatmap-legend{display:flex;justify-content:center;align-items:center;gap:6px;margin-top:8px;font-size:10px;color:rgba(232,184,75,.55);font-family:'Cinzel',serif;letter-spacing:.06em;}
+.heatmap-legend .heat-cell{width:12px;height:12px;display:inline-block;cursor:default;}
+.heatmap-legend .heat-cell:hover{transform:none;}
+
+/* Records personnels (panel) */
+.records-block{background:linear-gradient(135deg,rgba(40,28,12,.75),rgba(20,14,6,.85));border:1px solid rgba(232,184,75,.4);border-radius:6px;padding:14px;margin-bottom:18px;position:relative;}
+.records-block::before{content:'⚜';position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:#1a1108;padding:0 8px;color:var(--gold-light);font-size:14px;}
+.records-title{font-family:'Cinzel Decorative',cursive;color:var(--gold-light);font-size:15px;text-align:center;margin-bottom:12px;letter-spacing:.04em;}
+.records-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;}
+.record-item{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.3);border-left:3px solid var(--gold);border-radius:3px;padding:8px 12px;}
+.record-icon{font-size:24px;flex-shrink:0;filter:drop-shadow(0 0 6px rgba(232,184,75,.4));}
+.record-body{min-width:0;flex:1;}
+.record-name{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.08em;color:rgba(232,184,75,.7);text-transform:uppercase;}
+.record-value{font-family:'Cinzel Decorative',cursive;font-size:16px;color:var(--gold-light);line-height:1.2;}
+
+/* Dernières parties */
+.last-games{background:rgba(0,0,0,.25);border:1px solid rgba(201,146,42,.18);border-radius:6px;padding:12px 14px;margin-bottom:18px;}
+.last-games-title{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;text-align:center;}
+.last-game-row{display:grid;grid-template-columns:28px 1fr auto auto;gap:10px;align-items:center;padding:6px 0;border-bottom:1px dashed rgba(201,146,42,.12);font-size:12px;}
+.last-game-row:last-child{border-bottom:none;}
+.last-game-mode{font-size:18px;text-align:center;}
+.last-game-when{color:rgba(245,217,138,.6);font-family:'EB Garamond',serif;font-style:italic;}
+.last-game-score{font-family:'Cinzel Decorative',cursive;color:var(--gold-light);font-size:13px;font-weight:700;}
+.last-game-xp{font-family:'Cinzel',serif;font-size:10px;color:rgba(165,214,167,.8);background:rgba(165,214,167,.1);padding:2px 6px;border-radius:3px;}
+.last-games-empty{text-align:center;font-style:italic;color:rgba(245,217,138,.4);padding:14px;font-size:12px;}
+
+/* ────────── PROFIL PUBLIC (modal) ────────── */
+.public-profile{display:flex;flex-direction:column;gap:14px;}
+.pp-hero{text-align:center;padding-bottom:12px;border-bottom:1px solid rgba(201,146,42,.2);}
+.pp-avatar{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:inline-flex;align-items:center;justify-content:center;font-family:'Cinzel Decorative',cursive;font-size:28px;color:#1a1108;margin-bottom:8px;box-shadow:0 4px 18px rgba(201,146,42,.4);}
+.pp-name{font-family:'Cinzel Decorative',cursive;font-size:20px;color:var(--gold-light);display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;}
+.pp-grade{font-family:'Cinzel',serif;font-size:13px;color:var(--gold-pale);letter-spacing:.06em;margin-top:4px;}
+.pp-titles{margin-top:8px;display:flex;justify-content:center;gap:5px;flex-wrap:wrap;}
+.pp-stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+@media(max-width:520px){.pp-stats-grid{grid-template-columns:repeat(2,1fr);}}
+.pp-stat{background:rgba(0,0,0,.35);border:1px solid rgba(201,146,42,.2);border-radius:5px;padding:9px 6px;text-align:center;}
+.pp-stat .v{font-family:'Cinzel Decorative',cursive;font-size:18px;color:var(--gold-light);line-height:1;}
+.pp-stat .l{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,217,138,.55);margin-top:4px;}
+.pp-modes{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+@media(max-width:520px){.pp-modes{grid-template-columns:1fr;}}
+.pp-mode{background:rgba(0,0,0,.25);border:1px solid rgba(201,146,42,.18);border-radius:5px;padding:8px;}
+.pp-mode-title{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.08em;color:var(--gold);text-align:center;margin-bottom:4px;text-transform:uppercase;}
+.pp-mode-rows{font-size:11px;color:rgba(245,217,138,.7);text-align:center;display:flex;justify-content:center;gap:5px;flex-wrap:wrap;}
+.pp-meta{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;font-size:10px;color:rgba(232,184,75,.55);font-family:'EB Garamond',serif;font-style:italic;padding-top:8px;border-top:1px dashed rgba(201,146,42,.15);}
+/* ════════════════════════════════════════════════════════════ */
+
+/* ════════════════════════════════════════════════════════════ */
 /* ─────────────── PANNEAU D'ADMINISTRATION ────────────────── */
 /* ════════════════════════════════════════════════════════════ */
 
@@ -696,13 +793,17 @@ input,textarea{cursor:text;}
 .geo-map-svg .place-label{font-family:'EB Garamond',serif;font-size:10px;fill:var(--gold-pale);opacity:0;transition:opacity .2s;pointer-events:none;}
 .geo-map-svg .place-marker:hover .place-label{opacity:1;}
 /* Carte basée sur image */
-.geo-map-img-wrap{position:relative;width:100%;height:100%;overflow:hidden;}
+.geo-map-img-wrap{position:relative;width:100%;height:100%;overflow:hidden;background:#1a0e04;}
+/* Inner = layer pour le pan/zoom (transform appliqué ici) — simple wrapper */
 .geo-map-img-inner{position:absolute;inset:0;width:100%;height:100%;transform-origin:0 0;will-change:transform;transition:transform .12s ease-out;}
 .geo-map-img-inner.dragging{transition:none;}
-.geo-map-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block;background:#1a0e04;user-select:none;-webkit-user-drag:none;pointer-events:none;}
+/* Content = image + svg superposés exactement (centré dans le inner) */
+.geo-map-content{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);max-width:100%;max-height:100%;display:block;}
+.geo-map-img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;user-select:none;-webkit-user-drag:none;pointer-events:none;}
 .geo-map-img-fallback{display:none;position:absolute;inset:0;align-items:center;justify-content:center;text-align:center;padding:20px;color:var(--gold-pale);font-family:'Cinzel',serif;font-size:12px;line-height:1.6;background:rgba(40,20,10,.8);}
 .geo-map-img-fallback code{background:rgba(0,0,0,.5);padding:2px 6px;border-radius:3px;color:var(--gold-light);font-family:monospace;}
 .geo-map-img-wrap.img-failed .geo-map-img-fallback{display:flex;}
+/* SVG superposé sur le content (mêmes dimensions car même parent positionné) */
 .geo-map-overlay{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;}
 .geo-map-overlay > *{pointer-events:auto;}
 
@@ -1248,6 +1349,8 @@ input,textarea{cursor:text;}
       </div>
       <div class="achievements-grid" id="achGrid"></div>
     </div>
+
+    <div id="extendedStats"></div>
 
     <div class="info-box" id="profileNextGrade"></div>
     <div class="btn-row">
@@ -1983,6 +2086,15 @@ function newUser(displayName,isAdmin=false,extra={}){
     _fastAnswers:0,
     _perfect:false,
     titles:[],
+    // Nouvelles stats étendues
+    geoBestScore:0,
+    geoGamesPlayed:0,
+    geoTotalDistance:0,    // Distance cumulée en mètres dans Pisteur
+    quizGamesPlayed:0,
+    perfectGames:0,        // Parties avec 100% de bonnes réponses
+    totalAnswers:0,        // Total questions tentées (correctes + incorrectes)
+    totalTimeSeconds:0,    // Temps total passé à jouer
+    lastSeenAt:Date.now(), // Dernière connexion (pour "actif récemment")
     ...extra
   };
 }
@@ -1997,6 +2109,13 @@ function ensureUserShape(u){
   if(typeof u._perfect!=='boolean')u._perfect=false;
   if(!Array.isArray(u.titles))u.titles=[];
   if(typeof u.geoBestScore!=='number')u.geoBestScore=0;
+  if(typeof u.geoGamesPlayed!=='number')u.geoGamesPlayed=0;
+  if(typeof u.geoTotalDistance!=='number')u.geoTotalDistance=0;
+  if(typeof u.quizGamesPlayed!=='number')u.quizGamesPlayed=0;
+  if(typeof u.perfectGames!=='number')u.perfectGames=0;
+  if(typeof u.totalAnswers!=='number')u.totalAnswers=0;
+  if(typeof u.totalTimeSeconds!=='number')u.totalTimeSeconds=0;
+  if(typeof u.lastSeenAt!=='number')u.lastSeenAt=u.createdAt||Date.now();
   return u;
 }
 
@@ -2597,7 +2716,17 @@ function showResults(){
   if(game.score>u.bestScore)u.bestScore=game.score;
   if(game.bestStreakSession>u.bestStreak)u.bestStreak=game.bestStreakSession;
   u.gamesPlayed++;
+  u.quizGamesPlayed=(u.quizGamesPlayed||0)+1;
   u.totalCorrect+=game.correct;
+  u.totalAnswers=(u.totalAnswers||0)+game.questions.length;
+  u.lastSeenAt=Date.now();
+  // Compter "perfect game" si 100% sur série >= 5Q
+  if(game.correct===game.questions.length&&game.questions.length>=5){
+    u.perfectGames=(u.perfectGames||0)+1;
+  }
+  // Temps de jeu approximatif (timerMax × nb questions, moins le temps restant)
+  const sessionTime=Math.max(0,(game.questions.length*game.timerMax)-game.timeLeft);
+  u.totalTimeSeconds=(u.totalTimeSeconds||0)+sessionTime;
   // Stats par difficulté (basées sur recap.ok)
   game.recap.forEach(r=>{if(r.ok&&r.diff){u.diffStats[r.diff]=(u.diffStats[r.diff]||0)+1;}});
   // Compteur réponses rapides (cumul global)
@@ -2606,9 +2735,16 @@ function showResults(){
   if(game.correct===game.questions.length&&game.questions.length>=5)u._perfect=true;
   // Daily streak
   updateDailyStreak(u);
-  // Historique XP
-  u.xpHistory.push({date:Date.now(),xp:u.xp,score:game.score});
-  if(u.xpHistory.length>30)u.xpHistory=u.xpHistory.slice(-30);
+  // Historique XP — format étendu (date, xp cumulée, score, xp gagnée, mode, % correct)
+  u.xpHistory.push({
+    date:Date.now(),
+    xp:u.xp,
+    score:game.score,
+    xpGained:xpGained,
+    mode:'quiz',
+    pct:Math.round((game.correct/game.questions.length)*100)
+  });
+  if(u.xpHistory.length>50)u.xpHistory=u.xpHistory.slice(-50);
   // Achievements
   const newAch=checkAchievements(u);
   // Level up ?
@@ -2682,8 +2818,9 @@ function buildParkMapHTML(opts={}){
   const fallback=url.endsWith('.png')?MAP_CONFIG.altUrl:MAP_CONFIG.imageUrl;
   let html=`<div class="geo-map-img-wrap">
     <div class="geo-map-img-inner">
-      <img class="geo-map-img" src="${escapeHtml(url)}" alt="Carte du Puy du Fou" draggable="false" data-fb="${escapeHtml(fallback)}" onerror="if(this.dataset.fb&&this.src.indexOf(this.dataset.fb)===-1){this.src=this.dataset.fb;}else{this.style.display='none';this.parentElement.parentElement.classList.add('img-failed');}">
-      <svg class="geo-map-overlay" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">`;
+      <div class="geo-map-content">
+        <img class="geo-map-img" src="${escapeHtml(url)}" alt="Carte du Puy du Fou" draggable="false" data-fb="${escapeHtml(fallback)}" onerror="if(this.dataset.fb&&this.src.indexOf(this.dataset.fb)===-1){this.src=this.dataset.fb;}else{this.style.display='none';this.closest('.geo-map-img-wrap').classList.add('img-failed');}">
+        <svg class="geo-map-overlay" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">`;
 
   // Marqueurs des lieux (mode reveal)
   if(showAll){
@@ -2731,7 +2868,7 @@ function buildParkMapHTML(opts={}){
       }
     });
   }
-  html+='</svg></div>';
+  html+='</svg></div></div>';
   // Message d'erreur si la carte ne charge pas
   html+=`<div class="geo-map-img-fallback">⚠️ Carte introuvable.<br>Vérifie que <code>carte.png</code> ou <code>carte.webp</code> est bien à la racine du repo (à côté de index.html), puis fais Ctrl+F5.</div>`;
 
@@ -2780,10 +2917,14 @@ function applyMapTransform(wrap){
 function clampPan(wrap){
   // Empêcher de glisser la carte hors-vue (sauf un peu pour le confort)
   const state=getMapState(wrap);
+  const content=wrap.querySelector('.geo-map-content');
   const w=wrap.clientWidth,h=wrap.clientHeight;
-  // À zoom=1, pas de pan possible. À zoom>1, on peut pan jusqu'à voir les bords
-  const maxX=Math.max(0,(w*state.zoom-w)/2)+50;
-  const maxY=Math.max(0,(h*state.zoom-h)/2)+50;
+  // Dimensions du content centré (avant zoom). À zoom 1 il rentre dans le wrap (max-width:100%)
+  const cw=content?content.offsetWidth:w, ch=content?content.offsetHeight:h;
+  // À zoom>1, on peut pan jusqu'à voir les bords
+  const zoomedW=cw*state.zoom, zoomedH=ch*state.zoom;
+  const maxX=Math.max(0,(zoomedW-w)/2)+50;
+  const maxY=Math.max(0,(zoomedH-h)/2)+50;
   state.tx=Math.max(-maxX,Math.min(maxX,state.tx));
   state.ty=Math.max(-maxY,Math.min(maxY,state.ty));
 }
@@ -2932,39 +3073,23 @@ function attachMapZoom(wrap){
   });
 }
 
-/* Convertit des coordonnées d'événement clic en pourcentages 0-100 sur l'image,
-   en tenant compte du zoom et du pan ET de l'object-fit:contain */
+/* Convertit des coordonnées d'événement clic en pourcentages 0-100 sur la carte,
+   en tenant compte du zoom et du pan. Utilise .geo-map-content qui a EXACTEMENT
+   les mêmes dimensions que l'image (et que le SVG par-dessus). */
 function getMapClickPercent(wrap,ev){
-  const inner=wrap.querySelector('.geo-map-img-inner');
+  const content=wrap.querySelector('.geo-map-content');
   const img=wrap.querySelector('.geo-map-img');
-  if(!inner||!img||!img.naturalWidth)return null;
+  if(!content||!img||!img.naturalWidth)return null;
 
-  // Position du clic relative au wrap
-  const wrapRect=wrap.getBoundingClientRect();
-  const clickX=ev.clientX-wrapRect.left;
-  const clickY=ev.clientY-wrapRect.top;
+  // Position du clic dans le viewport, puis dans le content
+  const contentRect=content.getBoundingClientRect();
+  const relX=ev.clientX-contentRect.left;
+  const relY=ev.clientY-contentRect.top;
 
-  // Inverse le transform pour obtenir les coords sur l'image "non transformée"
-  const state=getMapState(wrap);
-  const ux=(clickX-state.tx)/state.zoom;
-  const uy=(clickY-state.ty)/state.zoom;
-
-  // Maintenant ux/uy sont en coords du `geo-map-img-inner` à zoom 1, qui prend toute la taille du wrap
-  // L'image dedans est en object-fit:contain, donc il peut y avoir des bandes vides
-  const innerW=wrap.clientWidth, innerH=wrap.clientHeight;
-  const imgAspect=img.naturalWidth/img.naturalHeight;
-  const innerAspect=innerW/innerH;
-  let displayW=innerW, displayH=innerH, offsetX=0, offsetY=0;
-  if(imgAspect>innerAspect){
-    displayH=innerW/imgAspect;
-    offsetY=(innerH-displayH)/2;
-  }else{
-    displayW=innerH*imgAspect;
-    offsetX=(innerW-displayW)/2;
-  }
-  const relX=ux-offsetX, relY=uy-offsetY;
-  if(relX<0||relX>displayW||relY<0||relY>displayH)return null;
-  return {x:(relX/displayW)*100, y:(relY/displayH)*100};
+  // contentRect.width et height sont déjà transformés par le zoom
+  // Pour avoir un pourcentage 0-100 sur l'image, il suffit de diviser
+  if(relX<0||relX>contentRect.width||relY<0||relY>contentRect.height)return null;
+  return {x:(relX/contentRect.width)*100, y:(relY/contentRect.height)*100};
 }
 
 /* ─── Ancienne carte SVG dessinée (gardée comme fallback si l'image ne charge pas) ─── */
@@ -3455,12 +3580,25 @@ async function endGeoGame(){
   const oldGrade=getGradeForXp(u.xp);
   u.xp=(u.xp||0)+xpGained;
   u.gamesPlayed=(u.gamesPlayed||0)+1;
+  u.geoGamesPlayed=(u.geoGamesPlayed||0)+1;
+  u.lastSeenAt=Date.now();
   // Best geoguess score
   if(!u.geoBestScore||geoGame.totalScore>u.geoBestScore)u.geoBestScore=geoGame.totalScore;
-  // xpHistory
+  // Distance totale (cumul des distances de tous les rounds)
+  const totalRoundDistance=geoGame.guesses.reduce((s,g)=>s+(g.distance||0),0);
+  u.geoTotalDistance=(u.geoTotalDistance||0)+totalRoundDistance;
+  // xpHistory — format étendu
   u.xpHistory=u.xpHistory||[];
-  u.xpHistory.push({date:Date.now(),xp:u.xp,score:geoGame.totalScore,mode:'geo'});
-  if(u.xpHistory.length>30)u.xpHistory=u.xpHistory.slice(-30);
+  u.xpHistory.push({
+    date:Date.now(),
+    xp:u.xp,
+    score:geoGame.totalScore,
+    xpGained:xpGained,
+    mode:'geo',
+    rounds:geoGame.rounds,
+    avgDistance:Math.round(totalRoundDistance/Math.max(1,geoGame.guesses.length))
+  });
+  if(u.xpHistory.length>50)u.xpHistory=u.xpHistory.slice(-50);
   // Achievements
   const newAch=checkAchievements(u);
   const newGrade=getGradeForXp(u.xp);
@@ -3540,7 +3678,7 @@ function renderLeaderboard(){
     const titleTags=renderTitleTags(u.titles||[]);
     const score=lbTab==='xp'?u.xp+' XP':u.bestScore+' pts';
     const meta=lbTab==='xp'?(u.bestScore+' record · '+u.gamesPlayed+' parties'):(u.xp+' XP cumulés · '+u.gamesPlayed+' parties');
-    html+=`<div class="lb-row ${tier} ${meCls}"><div class="lb-rank">${rDisp}</div><div class="lb-info"><div class="lb-name">${escapeHtml(u.name)}${adminTag}${meTag}${titleTags}</div><div class="lb-meta">${meta}</div></div><div class="lb-score">${score}</div></div>`;
+    html+=`<div class="lb-row ${tier} ${meCls}" onclick="viewPublicProfile('${jsEscape(u.name)}')" style="cursor:pointer;"><div class="lb-rank">${rDisp}</div><div class="lb-info"><div class="lb-name">${escapeHtml(u.name)}${adminTag}${meTag}${titleTags}</div><div class="lb-meta">${meta}</div></div><div class="lb-score">${score}</div></div>`;
   });
   tbl.innerHTML=html;
 }
@@ -3577,6 +3715,370 @@ function renderProfile(){
   }else{
     ng.innerHTML='☀️ Vous avez atteint le grade maximum : <span>Mythe Vivant</span> ! Bravo, votre nom est désormais éternel.';
   }
+  // Stats étendues (nouvelles)
+  renderExtendedStats(u);
+}
+
+/* Affiche les statistiques étendues sur le profil */
+function renderExtendedStats(u){
+  const wrap=document.getElementById('extendedStats');
+  if(!wrap)return;
+  ensureUserShape(u);
+
+  // Calculs dérivés
+  const accuracy=u.totalAnswers>0?Math.round((u.totalCorrect/u.totalAnswers)*100):0;
+  const totalMinutes=Math.round((u.totalTimeSeconds||0)/60);
+  const hoursStr=totalMinutes>=60?(Math.floor(totalMinutes/60)+'h'+(totalMinutes%60).toString().padStart(2,'0')):(totalMinutes+'min');
+  const avgGeoDistance=u.geoGamesPlayed>0?Math.round((u.geoTotalDistance||0)/u.geoGamesPlayed):0;
+
+  // Total des questions du parc
+  const totalQ=ALL_QUESTIONS.length;
+  const seenCount=(u.seenQuestions||[]).length;
+  const seenPct=Math.round((seenCount/totalQ)*100);
+
+  // ========== XP par mode (estimation à partir de xpHistory) ==========
+  const xpHist=u.xpHistory||[];
+  let xpQuiz=0,xpGeo=0;
+  xpHist.forEach(h=>{
+    const xpG=h.xpGained||0;
+    if(h.mode==='geo')xpGeo+=xpG;
+    else xpQuiz+=xpG;
+  });
+  // Si l'historique est vide ou incomplet, on déduit du total
+  const xpTracked=xpQuiz+xpGeo;
+  const xpUntracked=Math.max(0,(u.xp||0)-xpTracked);
+  // On attribue le untracked au quiz par défaut (le mode historique)
+  xpQuiz+=xpUntracked;
+
+  // ========== Heatmap activité (30 derniers jours) ==========
+  const today=new Date();today.setHours(0,0,0,0);
+  const days=30;
+  const heatData=Array(days).fill(0);
+  xpHist.forEach(h=>{
+    if(!h.date)return;
+    const d=new Date(h.date);d.setHours(0,0,0,0);
+    const daysAgo=Math.floor((today.getTime()-d.getTime())/86400000);
+    if(daysAgo>=0&&daysAgo<days){
+      heatData[days-1-daysAgo]+=(h.xpGained||0);
+    }
+  });
+  const maxHeat=Math.max(...heatData,1);
+
+  let html=`
+    <h3 class="stats-section-title">📊 Statistiques détaillées</h3>
+
+    <div class="stats-grid-extended">
+      <div class="stat-card">
+        <div class="stat-card-label">Précision</div>
+        <div class="stat-card-value">${accuracy}<span class="stat-unit">%</span></div>
+        <div class="stat-card-meta">${u.totalCorrect||0}/${u.totalAnswers||0} bonnes</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-label">Temps de jeu</div>
+        <div class="stat-card-value">${hoursStr}</div>
+        <div class="stat-card-meta">${u.gamesPlayed||0} parties</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-label">Sans-faute</div>
+        <div class="stat-card-value">${u.perfectGames||0}</div>
+        <div class="stat-card-meta">parties parfaites</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-label">Connaissance</div>
+        <div class="stat-card-value">${seenPct}<span class="stat-unit">%</span></div>
+        <div class="stat-card-meta">${seenCount}/${totalQ} questions vues</div>
+      </div>
+    </div>
+
+    <!-- Records personnels -->
+    ${renderRecords(u)}
+
+    <!-- Graphiques (camembert XP + barres difficultés) -->
+    <div class="stats-charts">
+      <div class="chart-block">
+        <div class="chart-title">XP par mode</div>
+        ${buildXpPieChart(xpQuiz,xpGeo)}
+        <div class="chart-legend">
+          <span><span class="chart-legend-dot" style="background:#E8B84B"></span>Quiz · ${xpQuiz.toLocaleString('fr-FR')} XP</span>
+          <span><span class="chart-legend-dot" style="background:#5d7eb8"></span>Pisteur · ${xpGeo.toLocaleString('fr-FR')} XP</span>
+        </div>
+      </div>
+      <div class="chart-block">
+        <div class="chart-title">Bonnes réponses par difficulté</div>
+        ${buildDiffBarsChart(u.diffStats||{})}
+      </div>
+    </div>
+
+    <!-- Heatmap activité 30 jours -->
+    <div class="chart-block" style="margin-bottom:18px;">
+      <div class="chart-title">📅 Activité des 30 derniers jours</div>
+      <div class="heatmap-wrap">
+        <div class="heatmap-grid">
+          ${heatData.map((xp,i)=>{
+            const daysAgo=days-1-i;
+            const date=new Date(today.getTime()-daysAgo*86400000);
+            const dateStr=date.toLocaleDateString('fr-FR',{day:'numeric',month:'short'});
+            let level=0;
+            if(xp>0)level=1;
+            if(xp>maxHeat*0.3)level=2;
+            if(xp>maxHeat*0.6)level=3;
+            if(xp>maxHeat*0.85)level=4;
+            return `<div class="heat-cell heat-l${level}" title="${dateStr} · ${xp} XP"></div>`;
+          }).join('')}
+        </div>
+      </div>
+      <div class="heatmap-legend">
+        <span>Moins</span>
+        <span class="heat-cell"></span>
+        <span class="heat-cell heat-l1"></span>
+        <span class="heat-cell heat-l2"></span>
+        <span class="heat-cell heat-l3"></span>
+        <span class="heat-cell heat-l4"></span>
+        <span>Plus</span>
+      </div>
+    </div>
+
+    <!-- Stats par mode -->
+    <div class="stats-modes">
+      <div class="stat-mode-block">
+        <div class="stat-mode-title">⚔️ Quiz classique</div>
+        <div class="stat-mode-row"><span>Parties</span><strong>${u.quizGamesPlayed||0}</strong></div>
+        <div class="stat-mode-row"><span>Meilleur score</span><strong>${u.bestScore||0} pts</strong></div>
+        <div class="stat-mode-row"><span>Meilleure série</span><strong>${u.bestStreak||0} 🔥</strong></div>
+        <div class="stat-mode-row"><span>Réponses rapides</span><strong>${u._fastAnswers||0} ⚡</strong></div>
+        <div class="stat-mode-row"><span>XP cumulée</span><strong>${xpQuiz.toLocaleString('fr-FR')}</strong></div>
+      </div>
+      <div class="stat-mode-block">
+        <div class="stat-mode-title">🗺️ Le Pisteur</div>
+        <div class="stat-mode-row"><span>Parties</span><strong>${u.geoGamesPlayed||0}</strong></div>
+        <div class="stat-mode-row"><span>Meilleur score</span><strong>${u.geoBestScore||0} pts</strong></div>
+        <div class="stat-mode-row"><span>Distance moyenne</span><strong>${avgGeoDistance} m</strong></div>
+        <div class="stat-mode-row"><span>Distance totale</span><strong>${(u.geoTotalDistance||0).toLocaleString('fr-FR')} m</strong></div>
+        <div class="stat-mode-row"><span>XP cumulée</span><strong>${xpGeo.toLocaleString('fr-FR')}</strong></div>
+      </div>
+    </div>
+
+    <!-- Dernières parties -->
+    ${renderLastGames(u)}
+  `;
+  wrap.innerHTML=html;
+}
+
+/* Camembert XP (SVG simple) */
+function buildXpPieChart(xpQuiz,xpGeo){
+  const total=xpQuiz+xpGeo;
+  if(total===0){
+    return `<svg class="chart-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="36" fill="none" stroke="rgba(201,146,42,.2)" stroke-width="14"/>
+      <text x="50" y="55" text-anchor="middle" fill="rgba(232,184,75,.5)" font-family="Cinzel,serif" font-size="8" font-style="italic">Aucune XP</text>
+    </svg>`;
+  }
+  const quizPct=xpQuiz/total;
+  const cx=50,cy=50,r=36;
+  // Donut chart
+  // Si quiz=100% ou geo=100%, on dessine juste un cercle
+  if(quizPct>=0.999){
+    return `<svg class="chart-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#E8B84B" stroke-width="14"/>
+      <text x="50" y="48" text-anchor="middle" fill="#E8B84B" font-family="Cinzel Decorative,cursive" font-size="14">100%</text>
+      <text x="50" y="60" text-anchor="middle" fill="rgba(232,184,75,.7)" font-family="Cinzel,serif" font-size="7">QUIZ</text>
+    </svg>`;
+  }
+  if(quizPct<=0.001){
+    return `<svg class="chart-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#5d7eb8" stroke-width="14"/>
+      <text x="50" y="48" text-anchor="middle" fill="#90caf9" font-family="Cinzel Decorative,cursive" font-size="14">100%</text>
+      <text x="50" y="60" text-anchor="middle" fill="rgba(144,202,249,.7)" font-family="Cinzel,serif" font-size="7">PISTEUR</text>
+    </svg>`;
+  }
+  // Calcul des arcs
+  const angle=quizPct*Math.PI*2;
+  const x1=cx+r*Math.sin(0), y1=cy-r*Math.cos(0); // top
+  const x2=cx+r*Math.sin(angle), y2=cy-r*Math.cos(angle);
+  const largeArc=angle>Math.PI?1:0;
+  return `<svg class="chart-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <!-- Fond pisteur (cercle complet bleu) -->
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#5d7eb8" stroke-width="14"/>
+    <!-- Arc quiz par-dessus -->
+    <path d="M ${cx} ${cy-r} A ${r} ${r} 0 ${largeArc} 1 ${x2.toFixed(2)} ${y2.toFixed(2)}"
+      fill="none" stroke="#E8B84B" stroke-width="14" stroke-linecap="butt"/>
+    <text x="50" y="48" text-anchor="middle" fill="#E8B84B" font-family="Cinzel Decorative,cursive" font-size="13">${Math.round(quizPct*100)}%</text>
+    <text x="50" y="59" text-anchor="middle" fill="rgba(232,184,75,.65)" font-family="Cinzel,serif" font-size="6">QUIZ</text>
+  </svg>`;
+}
+
+/* Barres horizontales — bonnes réponses par difficulté */
+function buildDiffBarsChart(diffStats){
+  const diffs=[
+    {key:'facile',label:'Facile',cls:'diff-facile'},
+    {key:'moyen',label:'Moyen',cls:'diff-moyen'},
+    {key:'dur',label:'Dur',cls:'diff-dur'},
+    {key:'extreme',label:'Extrême',cls:'diff-extreme'},
+  ];
+  const max=Math.max(1,...diffs.map(d=>diffStats[d.key]||0));
+  return `<div class="bars-chart">${diffs.map(d=>{
+    const v=diffStats[d.key]||0;
+    const pct=(v/max)*100;
+    return `<div class="bar-row">
+      <div class="bar-label">${d.label}</div>
+      <div class="bar-track"><div class="bar-fill ${d.cls}" style="width:${pct.toFixed(1)}%"></div></div>
+      <div class="bar-value">${v}</div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+/* Records personnels */
+function renderRecords(u){
+  const records=[
+    {ico:'🏆',name:'Score record quiz',val:(u.bestScore||0)+' pts'},
+    {ico:'🗺️',name:'Score record Pisteur',val:(u.geoBestScore||0)+' pts'},
+    {ico:'🔥',name:'Meilleure série',val:(u.bestStreak||0)+' bonnes rép.'},
+    {ico:'📅',name:'Série quotidienne',val:(u.dailyStreak||0)+' jour'+(u.dailyStreak>1?'s':'')},
+    {ico:'⚜️',name:'Grade actuel',val:getGradeForXp(u.xp||0).name},
+    {ico:'🎯',name:'Hauts faits',val:((u.achievements||[]).length)+' / '+ACHIEVEMENTS.length},
+  ];
+  return `<div class="records-block">
+    <div class="records-title">🏅 Records personnels</div>
+    <div class="records-grid">${records.map(r=>`
+      <div class="record-item">
+        <div class="record-icon">${r.ico}</div>
+        <div class="record-body">
+          <div class="record-name">${r.name}</div>
+          <div class="record-value">${escapeHtml(String(r.val))}</div>
+        </div>
+      </div>
+    `).join('')}</div>
+  </div>`;
+}
+
+/* Dernières parties (5 dernières) */
+function renderLastGames(u){
+  const hist=(u.xpHistory||[]).slice(-5).reverse();
+  if(hist.length===0){
+    return `<div class="last-games">
+      <div class="last-games-title">🕰️ Dernières parties</div>
+      <div class="last-games-empty">Aucune partie jouée pour le moment.</div>
+    </div>`;
+  }
+  return `<div class="last-games">
+    <div class="last-games-title">🕰️ Dernières parties</div>
+    ${hist.map(h=>{
+      const ico=h.mode==='geo'?'🗺️':'⚔️';
+      const score=h.score||0;
+      const xpG=h.xpGained||0;
+      const when=h.date?formatRelativeTime(h.date):'?';
+      const extra=h.mode==='geo'&&h.rounds?(' · '+h.rounds+' rounds'):(h.pct!==undefined?(' · '+h.pct+'%'):'');
+      return `<div class="last-game-row">
+        <div class="last-game-mode">${ico}</div>
+        <div>
+          <div style="color:var(--gold-pale);font-size:12px;">${h.mode==='geo'?'Le Pisteur':'Quiz'}${extra}</div>
+          <div class="last-game-when">${when}</div>
+        </div>
+        <div class="last-game-score">${score.toLocaleString('fr-FR')}</div>
+        <div class="last-game-xp">+${xpG} XP</div>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+/* Temps relatif ("Il y a 3 jours", "Aujourd'hui à 14h") */
+function formatRelativeTime(ts){
+  const d=new Date(ts);
+  const now=Date.now();
+  const diff=now-ts;
+  const minutes=Math.floor(diff/60000);
+  const hours=Math.floor(diff/3600000);
+  const days=Math.floor(diff/86400000);
+  if(minutes<1)return 'à l\'instant';
+  if(minutes<60)return 'il y a '+minutes+' min';
+  if(hours<24)return 'il y a '+hours+'h';
+  if(days===1)return 'hier à '+d.getHours().toString().padStart(2,'0')+'h'+d.getMinutes().toString().padStart(2,'0');
+  if(days<7)return 'il y a '+days+' jours';
+  return d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'});
+}
+
+/* ══════════════════ PROFIL PUBLIC (depuis le leaderboard) ══════════════════ */
+function viewPublicProfile(name){
+  const me=getSession();
+  // Si c'est moi, on me redirige vers mon profil normal
+  if(name===me){closeMenu();navTo('profile');return;}
+  const users=loadUsers();
+  // Trouver l'utilisateur (par name dans le cache)
+  let target=null;
+  for(const u of Object.values(users)){
+    if(u.name===name){target=u;break;}
+  }
+  if(!target){showToast('Utilisateur introuvable.','error');return;}
+  ensureUserShape(target);
+
+  const g=getGradeForXp(target.xp);
+  const accuracy=target.totalAnswers>0?Math.round((target.totalCorrect/target.totalAnswers)*100):0;
+  const totalMinutes=Math.round((target.totalTimeSeconds||0)/60);
+  const hoursStr=totalMinutes>=60?(Math.floor(totalMinutes/60)+'h'+(totalMinutes%60).toString().padStart(2,'0')):(totalMinutes+'min');
+  const lastSeenDays=target.lastSeenAt?Math.floor((Date.now()-target.lastSeenAt)/86400000):null;
+  const lastSeenStr=lastSeenDays===0?'Aujourd\'hui':(lastSeenDays===1?'Hier':(lastSeenDays!==null?'Il y a '+lastSeenDays+' j':'?'));
+  const memberSinceDays=target.createdAt?Math.floor((Date.now()-target.createdAt)/86400000):0;
+  const memberStr=memberSinceDays===0?'Aujourd\'hui':(memberSinceDays===1?'1 jour':(memberSinceDays+' jours'));
+  const avgGeoDistance=target.geoGamesPlayed>0?Math.round((target.geoTotalDistance||0)/target.geoGamesPlayed):0;
+  const titleTags=renderTitleTagsBig(target.titles||[]);
+  const adminBadge=target.isAdmin?'<span class="admin-tag">⚜ ADMIN ⚜</span>':'';
+
+  // Calcul des achievements débloqués
+  const unlocked=(target.achievements||[]).length;
+  const totalAch=ACHIEVEMENTS.length;
+
+  openModal(`<div class="public-profile">
+    <div class="pp-hero">
+      <div class="pp-avatar">${escapeHtml(name.charAt(0).toUpperCase())}</div>
+      <div class="pp-name">${escapeHtml(name)} ${adminBadge}</div>
+      <div class="pp-grade">${g.icon} ${escapeHtml(g.name)}</div>
+      ${titleTags?'<div class="pp-titles">'+titleTags+'</div>':''}
+    </div>
+
+    <div class="pp-stats-grid">
+      <div class="pp-stat"><div class="v">${target.xp||0}</div><div class="l">XP totale</div></div>
+      <div class="pp-stat"><div class="v">${target.bestScore||0}</div><div class="l">Record quiz</div></div>
+      <div class="pp-stat"><div class="v">${target.geoBestScore||0}</div><div class="l">Record Pisteur</div></div>
+      <div class="pp-stat"><div class="v">${target.gamesPlayed||0}</div><div class="l">Parties jouées</div></div>
+      <div class="pp-stat"><div class="v">${accuracy}%</div><div class="l">Précision</div></div>
+      <div class="pp-stat"><div class="v">${target.bestStreak||0}🔥</div><div class="l">Meilleure série</div></div>
+      <div class="pp-stat"><div class="v">${target.perfectGames||0}</div><div class="l">Parties parfaites</div></div>
+      <div class="pp-stat"><div class="v">${unlocked}/${totalAch}</div><div class="l">Hauts faits</div></div>
+    </div>
+
+    <div class="pp-modes">
+      <div class="pp-mode">
+        <div class="pp-mode-title">⚔️ Quiz</div>
+        <div class="pp-mode-rows">
+          <span>${target.quizGamesPlayed||0} parties</span>
+          <span>·</span>
+          <span>${target.totalCorrect||0} bonnes rép.</span>
+          <span>·</span>
+          <span>${target._fastAnswers||0} ⚡</span>
+        </div>
+      </div>
+      <div class="pp-mode">
+        <div class="pp-mode-title">🗺️ Pisteur</div>
+        <div class="pp-mode-rows">
+          <span>${target.geoGamesPlayed||0} parties</span>
+          <span>·</span>
+          <span>~${avgGeoDistance}m / round</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pp-meta">
+      <span>📅 Membre depuis ${memberStr}</span>
+      <span>·</span>
+      <span>👁️ Vu ${lastSeenStr.toLowerCase()}</span>
+      <span>·</span>
+      <span>🎯 ${target.dailyStreak||0} j de série</span>
+    </div>
+
+    <div class="btn-row" style="margin-top:14px;">
+      <button class="btn-primary" onclick="closeModal()">Fermer</button>
+    </div>
+  </div>`);
 }
 
 function drawSparkline(history){
@@ -4417,6 +4919,8 @@ window.addPhotoToCurrentPlace=addPhotoToCurrentPlace;
 window.removePhoto=removePhoto;
 // Map zoom
 window.mapZoom=mapZoom;
+// Profil public
+window.viewPublicProfile=viewPublicProfile;
 
 /* ══════════════════ FIREBASE AUTH STATE LISTENER ══════════════════ */
 // Écoute des changements d'authentification (login, logout, refresh de page, etc.)
