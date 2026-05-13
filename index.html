@@ -513,6 +513,7 @@ input,textarea{cursor:text;}
 .modal{background:linear-gradient(135deg,#1A1108,#251A0A);border:1px solid var(--gold);border-radius:8px;padding:22px;max-width:420px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 0 40px rgba(201,146,42,.3);}
 /* Modal large pour les outils admin (Photo Manager etc) */
 .modal:has(.pm-grid-v2){max-width:780px;}
+.modal:has(.pm-grid-v3){max-width:900px;}
 .modal h3{font-family:'Cinzel Decorative',cursive;font-size:18px;color:var(--gold-light);margin-bottom:12px;letter-spacing:.04em;text-align:center;}
 .modal p{font-size:13px;color:var(--parchment2);margin-bottom:12px;line-height:1.55;}
 
@@ -736,6 +737,36 @@ input,textarea{cursor:text;}
 .pm-tips li{margin:1px 0;}
 .pm-tips code{background:rgba(0,0,0,.4);padding:1px 4px;border-radius:2px;color:var(--gold-pale);font-family:monospace;font-size:10px;}
 /* ────────── FIN PHOTO MANAGER ────────── */
+
+/* ────────── PHOTO MANAGER V3 (photos indépendantes) ────────── */
+.pm-grid-v3{display:grid;grid-template-columns:220px 1fr;gap:14px;max-height:60vh;}
+@media(max-width:780px){.pm-grid-v3{grid-template-columns:1fr;max-height:none;}}
+
+.pm-photos-grid-wrap{background:rgba(0,0,0,.3);border:1px solid rgba(201,146,42,.2);border-radius:6px;padding:8px;overflow-y:auto;max-height:60vh;}
+@media(max-width:780px){.pm-photos-grid-wrap{max-height:280px;}}
+.pm-photos-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;}
+.pm-grid-empty{padding:30px 14px;text-align:center;font-style:italic;color:rgba(245,217,138,.5);font-size:12px;grid-column:1/-1;background:rgba(0,0,0,.2);border-radius:4px;border:1px dashed rgba(201,146,42,.2);}
+.pm-grid-card{position:relative;cursor:pointer;background:rgba(0,0,0,.35);border:1px solid rgba(201,146,42,.2);border-radius:4px;overflow:hidden;transition:all .15s;aspect-ratio:1;}
+.pm-grid-card:hover{border-color:rgba(232,184,75,.5);transform:translateY(-1px);box-shadow:0 4px 12px rgba(201,146,42,.2);}
+.pm-grid-card.sel{border-color:var(--gold-light);box-shadow:0 0 12px rgba(232,184,75,.4);}
+.pm-grid-card.sel::after{content:'✓';position:absolute;top:3px;right:3px;width:18px;height:18px;background:var(--gold);color:#1a1108;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;}
+.pm-grid-img{width:100%;height:100%;object-fit:cover;display:block;}
+.pm-grid-pos{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.7);color:var(--gold-pale);font-size:9px;font-family:monospace;padding:2px 4px;text-align:center;}
+.pm-grid-label{position:absolute;top:0;left:0;right:0;background:linear-gradient(180deg,rgba(0,0,0,.7),transparent);color:var(--gold-light);font-size:9px;padding:3px 4px;font-family:'Cinzel',serif;letter-spacing:.04em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+.pm-photo-detail{background:rgba(0,0,0,.25);border:1px solid rgba(201,146,42,.25);border-radius:6px;padding:10px;margin-top:10px;}
+.pm-detail-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px;}
+.pm-detail-header strong{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);}
+.pm-preview{width:100%;max-height:140px;object-fit:cover;border-radius:4px;border:1px solid rgba(201,146,42,.3);display:block;margin-bottom:6px;background:#000;}
+.pm-detail-controls{margin-top:8px;padding-top:8px;border-top:1px dashed rgba(201,146,42,.15);}
+.pm-detail-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;padding-top:8px;border-top:1px dashed rgba(201,146,42,.15);}
+.pm-detail-actions .btn-secondary,.pm-detail-actions a.btn-secondary{font-size:11px;padding:6px 10px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;}
+
+.pm-no-selection{padding:24px 14px;text-align:center;color:rgba(245,217,138,.55);background:rgba(0,0,0,.2);border-radius:4px;border:1px dashed rgba(201,146,42,.2);margin-top:10px;font-style:italic;font-size:12px;}
+.pm-no-selection-icon{font-size:32px;margin-bottom:8px;opacity:.6;}
+
+.pm-add-section{background:linear-gradient(135deg,rgba(201,146,42,.08),rgba(232,184,75,.04));border:1px dashed rgba(232,184,75,.4);border-radius:5px;padding:10px 14px;margin-top:14px;}
+/* ────────── FIN PHOTO MANAGER V3 ────────── */
 
 /* Setup : sélection rounds */
 .rounds-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
@@ -1502,7 +1533,8 @@ let _usersCache = {};            // cache local de tous les users (alimenté par
 let _usersUnsubscribe = null;    // pour stopper le listener temps réel
 let _myDocUnsubscribe = null;
 let _firebaseReady = false;
-let _placePhotosCache = {};      // {placeId: ['url1', 'url2', ...]} alimenté depuis Firestore
+let _placePhotosCache = {};      // {placeId: ['url1', 'url2', ...]} - LEGACY rétrocompat
+let _photoLibrary = [];          // Tableau plat des photos indépendantes : [{id, url, x, y, label, addedAt, addedBy}]
 let _placePhotosUnsubscribe = null;
 
 /* ══════════════════ BANQUE DE QUESTIONS ══════════════════ */
@@ -1747,6 +1779,79 @@ const ALL_QUESTIONS = [
   {text:"Quel record le Puy du Fou détient-il en France pour la fréquentation cumulée d'un spectacle nocturne ?",type:"texte",media:null,answers:["Aucun record","Plus grand spectacle nocturne au monde","Plus ancien parc à thème","Plus grande aire de jeux"],correct:1,difficulty:"extreme",points:200,anecdote:"La Cinéscénie est officiellement le plus grand spectacle nocturne au monde par sa scène (23 ha) et sa capacité (13 000 places)."},
   {text:"Quel a été le record d'affluence enregistré sur une seule journée au Puy du Fou ?",type:"texte",media:null,answers:["10 000","25 000","Plus de 40 000","Plus de 100 000"],correct:2,difficulty:"extreme",points:200,anecdote:"Le parc accueille plus de 40 000 visiteurs lors des journées les plus chargées de l'été."},
   {text:"Quelle est la principale source d'inspiration des spectacles du Puy du Fou ?",type:"texte",media:null,answers:["L'imagination de Nicolas de Villiers","L'Histoire de France et ses légendes","La littérature contemporaine","Les comics américains"],correct:1,difficulty:"extreme",points:200,anecdote:"L'Histoire de France et ses grandes légendes sont au cœur de toutes les créations du Puy du Fou."},
+
+  // ══════════════════════════════════════════════════════════════
+  // ─── NOUVELLES QUESTIONS — HISTOIRE COMPLÈTE DU PARC ────────
+  // ══════════════════════════════════════════════════════════════
+
+  // ─── 1977-1989 : LES ORIGINES ───
+  {text:"En quelle année Philippe de Villiers a-t-il découvert les ruines du château du Puy du Fou ?",type:"texte",media:null,answers:["1975","1976","1977","1978"],correct:2,difficulty:"facile",points:60,anecdote:"En 1977, alors jeune haut fonctionnaire, Philippe de Villiers découvre les ruines envahies d'orties du château et y voit le décor d'un spectacle exaltant l'histoire de la Vendée."},
+  {text:"En quelle année a eu lieu la toute première représentation de la Cinéscénie ?",type:"texte",media:null,answers:["1977","1978","1979","1980"],correct:1,difficulty:"facile",points:60,anecdote:"La première Cinéscénie a été jouée le 16 juin 1978 devant un public conquis. 81 000 spectateurs assistent au spectacle dès la première année."},
+  {text:"Qui est le créateur du Puy du Fou ?",type:"texte",media:null,answers:["Nicolas de Villiers","Philippe de Villiers","Jacques de Villiers","Bertrand de Villiers"],correct:1,difficulty:"facile",points:60,anecdote:"Philippe de Villiers, alors âgé de 28 ans, a imaginé, écrit et mis en scène la première Cinéscénie."},
+  {text:"Quel était le titre original de la Cinéscénie avant qu'elle ne reçoive son nom définitif ?",type:"texte",media:null,answers:["La Vendée triomphante","Ce soir, la Vendée","La nuit des Maupillier","L'âme de la Vendée"],correct:1,difficulty:"dur",points:150,anecdote:"Le spectacle s'appelait initialement « Ce soir, la Vendée » avant de devenir « La Cinéscénie »."},
+  {text:"Combien de bénévoles ont participé à la toute première représentation de la Cinéscénie en 1978 ?",type:"texte",media:null,answers:["Environ 100","Environ 300","Environ 600","Environ 1000"],correct:2,difficulty:"moyen",points:100,anecdote:"Environ 600 Puyfolais bénévoles, surnommés les « Puyfolais », ont interprété cette première représentation."},
+  {text:"En quelle année le « Grand Parc » du Puy du Fou a-t-il officiellement ouvert ses portes ?",type:"texte",media:null,answers:["1985","1989","1991","1995"],correct:1,difficulty:"moyen",points:100,anecdote:"Le Grand Parc a ouvert en 1989, d'abord sous le nom de « Grand Parcours »."},
+  {text:"Quel était le statut professionnel de Philippe de Villiers lorsqu'il a créé la Cinéscénie ?",type:"texte",media:null,answers:["Avocat","Sous-préfet","Médecin","Journaliste"],correct:1,difficulty:"dur",points:150,anecdote:"Philippe de Villiers était jeune sous-préfet en Vendée lorsqu'il lance le projet."},
+  {text:"Quel principe fondamental Philippe de Villiers a-t-il imposé dès la création de la Cinéscénie ?",type:"texte",media:null,answers:["L'utilisation exclusive du français","Pas de droits d'auteur pour le scénariste","La gratuité totale","Une seule représentation par an"],correct:1,difficulty:"extreme",points:200,anecdote:"En 1978, devant les 300 premiers volontaires, Philippe de Villiers fait le serment qu'il n'y aura jamais de droits d'auteur pour le scénariste au Puy du Fou."},
+
+  // ─── 1990-1999 : EXPANSION ───
+  {text:"En quelle année le Fort de l'An Mil (futur spectacle Les Vikings) a-t-il pris vie ?",type:"texte",media:null,answers:["1989","1991","1994","1997"],correct:2,difficulty:"dur",points:150,anecdote:"Le Fort de l'An Mil a été construit en 1994, proposant un voyage au temps des Vikings."},
+  {text:"En quelle année l'Académie Junior, école de formation du Puy du Fou, a-t-elle été créée ?",type:"texte",media:null,answers:["1995","1998","2001","2003"],correct:1,difficulty:"extreme",points:200,anecdote:"L'Académie Junior, créée en 1998, forme aujourd'hui environ 600 élèves par an dans 29 disciplines artistiques et techniques."},
+  {text:"En quelle année le Stadium Gallo-Romain a-t-il été inauguré ?",type:"texte",media:null,answers:["1993","1995","1998","2001"],correct:1,difficulty:"extreme",points:200,anecdote:"Le Stadium Gallo-Romain a été inauguré en 1995 par Patrick Poivre d'Arvor et Jean-Claude Killy."},
+  {text:"Quel acteur célèbre a parrainé le spectacle « La Bataille du Donjon » en 1995 ?",type:"texte",media:null,answers:["Jean Reno","Gérard Depardieu","Alain Delon","Jean-Paul Belmondo"],correct:2,difficulty:"dur",points:150,anecdote:"Alain Delon a parrainé « La Bataille du Donjon », spectacle aux cascades époustouflantes créé en 1995."},
+  {text:"En quelle année le spectacle « Le Bal des Oiseaux Fantômes » a-t-il été créé ?",type:"texte",media:null,answers:["1992","1995","2000","2003"],correct:1,difficulty:"dur",points:150,anecdote:"Le Bal des Oiseaux Fantômes a été créé en 1995. Aujourd'hui, plus de 300 rapaces y volent en totale liberté."},
+  {text:"Quel artiste de renom a composé une bande originale pour la Cinéscénie dans ses premières années ?",type:"texte",media:null,answers:["Ennio Morricone","Georges Delerue","Vladimir Cosma","Michel Legrand"],correct:1,difficulty:"extreme",points:200,anecdote:"Georges Delerue, célèbre compositeur français, a composé une des premières musiques originales de la Cinéscénie."},
+
+  // ─── 2000-2009 : LE PARC PREND DE L'AMPLEUR ───
+  {text:"En quelle année Nicolas de Villiers est-il devenu président du Puy du Fou ?",type:"texte",media:null,answers:["1999","2004","2008","2012"],correct:1,difficulty:"dur",points:150,anecdote:"Nicolas de Villiers, fils de Philippe, a été élu président de l'Association en janvier 2004."},
+  {text:"Quel est le premier hôtel thématique du Puy du Fou, ouvert en 2007 ?",type:"texte",media:null,answers:["Le Grand Siècle","La Villa Gallo-Romaine","La Citadelle","Les Îles de Clovis"],correct:1,difficulty:"moyen",points:100,anecdote:"La Villa Gallo-Romaine, ouverte en juin 2007, est le premier hôtel du Puy du Fou. Elle marque la naissance de la Cité Nocturne."},
+  {text:"En quelle année le spectacle « Mousquetaire de Richelieu » dans le Grand Carrousel a-t-il été créé ?",type:"texte",media:null,answers:["2002","2006","2010","2013"],correct:1,difficulty:"dur",points:150,anecdote:"Le Mousquetaire de Richelieu, théâtre équestre de 6000 m², a été créé en 2006 dans le Grand Carrousel."},
+  {text:"En quelle année le Bourg 1900 a-t-il été inauguré à l'entrée du Grand Parc ?",type:"texte",media:null,answers:["2001","2003","2006","2009"],correct:2,difficulty:"extreme",points:200,anecdote:"Le Bourg 1900, qui transporte les visiteurs dans la Belle Époque, a ouvert en 2006."},
+  {text:"Qui a composé la bande originale de la nouvelle Cinéscénie révélée à la fin des années 2000 ?",type:"texte",media:null,answers:["Hans Zimmer","Nick Glennie-Smith","John Williams","Howard Shore"],correct:1,difficulty:"extreme",points:200,anecdote:"Nick Glennie-Smith, compositeur britannique, a signé la bande originale de la nouvelle Cinéscénie."},
+
+  // ─── 2010-2019 : RECONNAISSANCE MONDIALE ───
+  {text:"En quelle année le Puy du Fou a-t-il reçu le « Thea Classic Award » du Meilleur Parc du Monde ?",type:"texte",media:null,answers:["2010","2012","2014","2016"],correct:1,difficulty:"dur",points:150,anecdote:"Le 17 mars 2012, le Puy du Fou a reçu le Thea Classic Award à Los Angeles, sacre mondial."},
+  {text:"Quel spectacle créé en 2016 a remporté le titre de « Meilleure Création Mondiale » ?",type:"texte",media:null,answers:["Les Amoureux de Verdun","Le Dernier Panache","Le Premier Royaume","Le Mime et l'Étoile"],correct:1,difficulty:"moyen",points:100,anecdote:"Le Dernier Panache, créé en 2016, a remporté le titre de Meilleure Création Mondiale à Los Angeles en 2017."},
+  {text:"En quelle année le spectacle « Les Amoureux de Verdun » a-t-il été créé ?",type:"texte",media:null,answers:["2013","2015","2017","2019"],correct:1,difficulty:"dur",points:150,anecdote:"Les Amoureux de Verdun, plongée immersive dans une tranchée de 14-18, a été créé en 2015."},
+  {text:"En quelle année le spectacle « Le Mystère de La Pérouse » a-t-il été inauguré ?",type:"texte",media:null,answers:["2016","2018","2020","2022"],correct:1,difficulty:"moyen",points:100,anecdote:"Le Mystère de La Pérouse, ouvert en 2018, a reçu le prix de la Meilleure Création d'Europe à Amsterdam la même année."},
+  {text:"Quel est le sujet historique du spectacle « Le Premier Royaume » créé en 2019 ?",type:"texte",media:null,answers:["Charlemagne","Clovis","Hugues Capet","Saint-Louis"],correct:1,difficulty:"moyen",points:100,anecdote:"Le Premier Royaume raconte l'épopée de Clovis, roi des Francs et père du premier royaume chrétien d'Occident."},
+  {text:"Sur quelle expédition historique est basé le spectacle « Le Mystère de La Pérouse » ?",type:"texte",media:null,answers:["L'expédition de James Cook","L'expédition de La Pérouse autour du monde","L'expédition de Bougainville","L'expédition de Magellan"],correct:1,difficulty:"moyen",points:100,anecdote:"Le spectacle suit l'expédition de Jean-François de La Pérouse, ordonnée par Louis XVI en 1785, sur les navires La Boussole et L'Astrolabe."},
+  {text:"Quels étaient les noms des deux frégates de l'expédition de La Pérouse ?",type:"texte",media:null,answers:["La Belle et La Bonne","La Boussole et L'Astrolabe","L'Hermione et La Renommée","La Méduse et La Sirène"],correct:1,difficulty:"dur",points:150,anecdote:"La Boussole et L'Astrolabe ont disparu en juin 1788 lors d'un cyclone, mystère résolu seulement bien des années plus tard."},
+
+  // ─── 2020-2025 : ÈRE MODERNE ───
+  {text:"Quel montant le Puy du Fou a-t-il investi en 2020 dans ses nouveautés malgré la pandémie ?",type:"texte",media:null,answers:["15 millions €","32 millions €","52 millions €","75 millions €"],correct:2,difficulty:"extreme",points:200,anecdote:"Un investissement historique de 52 millions d'euros a été réalisé pour la saison 2020 : Les Noces de Feu, l'Hôtel Le Grand Siècle et le Palais des Congrès Le Théâtre Molière."},
+  {text:"En quelle année le spectacle nocturne « Les Noces de Feu » a-t-il été créé ?",type:"texte",media:null,answers:["2018","2019","2020","2022"],correct:2,difficulty:"moyen",points:100,anecdote:"Les Noces de Feu, féerie nocturne sur le Vieux Lac, a été inauguré en 2020."},
+  {text:"En quelle année « Le Monde Imaginaire de La Fontaine » a-t-il été revisité avec de nouvelles fables ?",type:"texte",media:null,answers:["2019","2020","2021","2023"],correct:2,difficulty:"extreme",points:200,anecdote:"En 2021, ce jardin de plus de 7500 m² a été embelli et de nouvelles fables y ont été ajoutées."},
+  {text:"En quelle année le spectacle « Le Signe du Triomphe » a-t-il reçu un nouveau final ?",type:"texte",media:null,answers:["2020","2022","2024","2025"],correct:1,difficulty:"dur",points:150,anecdote:"En 2022, Le Signe du Triomphe s'est doté d'un nouveau final spectaculaire avec l'apparition d'une immense galère romaine sur le sable."},
+  {text:"En quelle année le spectacle « Le Mime et l'Étoile » a-t-il été lancé ?",type:"texte",media:null,answers:["2021","2022","2023","2024"],correct:2,difficulty:"facile",points:60,anecdote:"Le Mime et l'Étoile a été inauguré le 8 avril 2023 et a immédiatement reçu plusieurs prix mondiaux."},
+  {text:"Quel est le budget de production du spectacle « Le Mime et l'Étoile » ?",type:"texte",media:null,answers:["Plus de 5 millions €","Plus de 10 millions €","Plus de 20 millions €","Plus de 50 millions €"],correct:2,difficulty:"extreme",points:200,anecdote:"Avec plus de 20 millions d'euros, c'est le plus gros budget jamais investi en Europe pour un spectacle vivant."},
+  {text:"Combien de tonnes pèse la machinerie spectaculaire du « Mime et l'Étoile » ?",type:"texte",media:null,answers:["20 tonnes","50 tonnes","80 tonnes","Plus de 140 tonnes"],correct:3,difficulty:"extreme",points:200,anecdote:"La machinerie complexe du Mime et l'Étoile, conçue par Europe Technologies, pèse plus de 140 tonnes."},
+  {text:"En 2024, quel titre prestigieux « Le Mime et l'Étoile » a-t-il reçu à Los Angeles ?",type:"texte",media:null,answers:["Spectacle de l'année","Meilleur Spectacle du Monde","Innovation technologique","Prix du public"],correct:1,difficulty:"moyen",points:100,anecdote:"Le 16 mars 2024, lors des THEA AWARDS à Los Angeles, Le Mime et l'Étoile a reçu le titre de Meilleur Spectacle du Monde."},
+  {text:"À quelle époque historique se déroule l'action du « Mime et l'Étoile » ?",type:"texte",media:null,answers:["Années 1880","Années 1910-1920","Années 1930-1940","Années 1950"],correct:1,difficulty:"moyen",points:100,anecdote:"L'histoire se déroule à la Belle Époque et aux débuts du cinéma muet, autour de 1914."},
+  {text:"Quel spectacle a remplacé « Les Chevaliers de la Table Ronde » en 2025 ?",type:"texte",media:null,answers:["Le Roi du Monde","Excalibur","L'Épée du Roi Arthur","Camelot"],correct:2,difficulty:"facile",points:60,anecdote:"L'Épée du Roi Arthur, nouveauté 2025, succède au spectacle des Chevaliers de la Table Ronde."},
+  {text:"Quel est le nom du jeune héros du spectacle « L'Épée du Roi Arthur » ?",type:"texte",media:null,answers:["Lancelot","Galahad","Tristan","Perceval"],correct:2,difficulty:"moyen",points:100,anecdote:"Le jeune Tristan part chercher Excalibur pour délivrer le roi Arthur emprisonné par un sortilège."},
+  {text:"Quelle est la superficie de l'espace scénique du spectacle « L'Épée du Roi Arthur » ?",type:"texte",media:null,answers:["500 m²","1500 m²","2500 m²","5000 m²"],correct:2,difficulty:"extreme",points:200,anecdote:"L'Épée du Roi Arthur se joue sur 2500 m² avec une machinerie de plus de 40 tonnes en mouvement."},
+
+  // ─── CINÉSCÉNIE : LE COEUR DU PARC ───
+  {text:"Quel est le nom de la famille de paysans dont l'histoire est racontée dans la Cinéscénie ?",type:"texte",media:null,answers:["Les Maupillier","Les Charette","Les Cathelineau","Les La Rochejaquelein"],correct:0,difficulty:"facile",points:60,anecdote:"La Cinéscénie raconte le destin de la famille Maupillier à travers les siècles de l'histoire vendéenne."},
+  {text:"Quel est le prénom du héros principal de la Cinéscénie ?",type:"texte",media:null,answers:["Jean-Baptiste","Jacques-Louis","Pierre-Marie","François-Henri"],correct:1,difficulty:"dur",points:150,anecdote:"Jacques-Louis Maupillier, paysan vendéen enrôlé adolescent dans la guerre de Vendée, est le héros central."},
+  {text:"De quelle période à quelle période s'étend l'histoire racontée par la Cinéscénie ?",type:"texte",media:null,answers:["Antiquité au XVIIIe siècle","Moyen Âge à la Seconde Guerre mondiale","Préhistoire à la Renaissance","Moyen Âge au XIXe siècle"],correct:1,difficulty:"moyen",points:100,anecdote:"La Cinéscénie retrace l'histoire de la Vendée du Moyen Âge à la Seconde Guerre mondiale."},
+
+  // ─── RECONNAISSANCE INTERNATIONALE ───
+  {text:"Combien de visiteurs annuels le Puy du Fou accueille-t-il aujourd'hui environ ?",type:"texte",media:null,answers:["500 000","1 million","Plus de 2,5 millions","Plus de 5 millions"],correct:2,difficulty:"facile",points:60,anecdote:"Le Puy du Fou accueille aujourd'hui plus de 2,8 millions de visiteurs chaque année."},
+  {text:"Selon le site officiel, en quelle ville la première Cinéscénie a-t-elle été représentée ?",type:"texte",media:null,answers:["Cholet","Les Sables-d'Olonne","Les Epesses","La Roche-sur-Yon"],correct:2,difficulty:"dur",points:150,anecdote:"Le Puy du Fou est situé sur la commune des Epesses, en Vendée."},
+  {text:"En quelle année le Puy du Fou a-t-il reçu un Hall of Fame Award à Orlando ?",type:"texte",media:null,answers:["2014","2015","2017","2019"],correct:2,difficulty:"extreme",points:200,anecdote:"Le 14 novembre 2017, le Puy du Fou a reçu un Hall of Fame Award à Orlando, lors de l'IAAPA Attractions Expo."},
+
+  // ─── INFOS GÉNÉRALES ───
+  {text:"Combien d'élèves environ accueille l'Académie Junior du Puy du Fou ?",type:"texte",media:null,answers:["100","300","600","1000"],correct:2,difficulty:"extreme",points:200,anecdote:"L'Académie Junior accueille environ 600 élèves par an dans 29 disciplines."},
+  {text:"Comment surnomme-t-on les bénévoles qui participent à la Cinéscénie ?",type:"texte",media:null,answers:["Les Puyfolais","Les Vendéens","Les Maupilliers","Les Templiers"],correct:0,difficulty:"facile",points:60,anecdote:"Les Puyfolais sont les bénévoles passionnés qui participent à la Cinéscénie depuis 1978."},
+  {text:"Aujourd'hui, combien de Puyfolais bénévoles participent à la Cinéscénie ?",type:"texte",media:null,answers:["Environ 500","Environ 1500","Environ 2 550","Environ 5000"],correct:2,difficulty:"dur",points:150,anecdote:"Près de 2 550 acteurs bénévoles, ou Puyfolais, participent chaque été à la Cinéscénie."},
+  {text:"Quelle est la superficie totale du parc du Puy du Fou ?",type:"texte",media:null,answers:["100 hectares","250 hectares","Environ 500 hectares","Plus de 1000 hectares"],correct:2,difficulty:"extreme",points:200,anecdote:"Le parc s'étend sur environ 500 hectares, dont 23 hectares pour la seule scène de la Cinéscénie."},
+  {text:"Quel système le Puy du Fou propose-t-il pour aider les visiteurs à organiser leur journée ?",type:"texte",media:null,answers:["Un guide papier","Un moteur de visite","Des conseillers à l'entrée","Rien de spécifique"],correct:1,difficulty:"dur",points:150,anecdote:"Un moteur de visite a été développé : il compose un programme personnalisé parmi les 18 spectacles selon le temps disponible et les centres d'intérêt. 60 % des visiteurs l'utilisent."},
+  {text:"En moyenne, combien de jours les familles passent-elles au Puy du Fou ?",type:"texte",media:null,answers:["1 jour","1,7 jour","2,5 jours","Plus de 3 jours"],correct:1,difficulty:"extreme",points:200,anecdote:"Les familles passent en moyenne 1,7 jour sur place, séjournant souvent dans les hôtels thématiques."},
+  {text:"Quel principe économique le Grand Parc a-t-il adopté dès 1989 ?",type:"texte",media:null,answers:["Subventions publiques","Indépendance économique (aucune aide extérieure)","Crowdfunding","Sponsoring exclusif"],correct:1,difficulty:"extreme",points:200,anecdote:"Dès 1989, le Grand Parc applique le principe d'indépendance économique : aucune subvention ni aide capitalistique extérieure."},
+  {text:"À quelle fréquence le Puy du Fou lance-t-il généralement un nouveau spectacle majeur ?",type:"texte",media:null,answers:["Tous les ans","Tous les 2 ans","Tous les 5 ans","Tous les 10 ans"],correct:1,difficulty:"moyen",points:100,anecdote:"Le Puy du Fou lance un nouveau spectacle majeur tous les deux ans environ, et chaque spectacle est remis en question annuellement."},
+  {text:"Quel pourcentage des visiteurs reviennent au Puy du Fou dans un délai maximum de 5 ans ?",type:"texte",media:null,answers:["25 %","50 %","74 %","Plus de 90 %"],correct:2,difficulty:"extreme",points:200,anecdote:"74 % des visiteurs reviennent au Puy du Fou dans un délai maximum de 5 ans, témoin de la fidélité du public."},
 ];
 
 /* ══════════════════ CONSTANTES ══════════════════ */
@@ -2850,10 +2955,12 @@ function buildParkMapHTML(opts={}){
       <circle r=".7" fill="#e53935" stroke="#fff" stroke-width=".25"/>
     </g>`;
   }
-  // La supposition (étoile dorée)
+  // La supposition (étoile dorée) — wrapper externe pour le translate, interne pour l'animation
   if(guess){
-    html+=`<g class="my-guess" transform="translate(${guess.x},${guess.y})">
-      <path d="M 0 -2.2 L .55 -.65 L 2.2 -.65 L .9 .35 L 1.45 1.9 L 0 1 L -1.45 1.9 L -.9 .35 L -2.2 -.65 L -.55 -.65 Z" fill="#E8B84B" stroke="#8B5E0A" stroke-width=".2"/>
+    html+=`<g transform="translate(${guess.x},${guess.y})">
+      <g class="my-guess">
+        <path d="M 0 -2.2 L .55 -.65 L 2.2 -.65 L .9 .35 L 1.45 1.9 L 0 1 L -1.45 1.9 L -.9 .35 L -2.2 -.65 L -.55 -.65 Z" fill="#E8B84B" stroke="#8B5E0A" stroke-width=".2"/>
+      </g>
     </g>`;
   }
   // Ligne entre les deux
@@ -3155,37 +3262,88 @@ function buildPlaceIllustration(place){
 /* ─── Démarrer une partie ─── */
 function startGeoGame(){
   const u=currentUser();if(!u)return;
-  // Tirer N lieux au hasard sans répétition
-  const pool=[...PARK_PLACES];
+  // Construire le pool des "rounds" : photos indépendantes (priorité) + lieux legacy en fallback
+  const pool=[];
+  // 1) Photos de la bibliothèque (chacune avec sa position propre)
+  (_photoLibrary||[]).forEach(photo=>{
+    if(photo&&photo.url&&typeof photo.x==='number'&&typeof photo.y==='number'){
+      pool.push({
+        _type:'photo',
+        id:photo.id,
+        url:photo.url,
+        x:photo.x,y:photo.y,
+        label:photo.label||'',
+      });
+    }
+  });
+  // 2) Si vraiment pas assez de photos indépendantes, on complète avec les lieux legacy
+  if(pool.length<geoGame.rounds){
+    PARK_PLACES.forEach(place=>{
+      const photos=_placePhotosCache[place.id]||[];
+      if(photos.length>0){
+        // Une entrée par photo legacy (même position)
+        photos.forEach(url=>{
+          pool.push({_type:'legacy_photo',id:place.id+'_'+pool.length,url:url,x:place.x,y:place.y,label:place.name});
+        });
+      }else if(pool.length<geoGame.rounds){
+        // Si aucune photo, on garde le lieu avec son illustration SVG (rétrocompat totale)
+        pool.push({_type:'place',...place});
+      }
+    });
+  }
+  if(pool.length===0){
+    showToast('Aucune photo dans la bibliothèque. Ajoute des photos via le panel admin.','error');
+    return;
+  }
+  // Mélanger
   for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
   geoGame.places=pool.slice(0,Math.min(geoGame.rounds,pool.length));
+  geoGame.rounds=geoGame.places.length;
   geoGame.currentRound=0;
   geoGame.guesses=[];
   geoGame.totalScore=0;
   geoGame.guessX=null;geoGame.guessY=null;
   geoGame.state='guessing';
   navTo('geo-game');
-  audioCtx(); // wakeup
+  audioCtx();
   renderGeoRound();
 }
 
 /* ─── Afficher un round ─── */
 function renderGeoRound(){
-  const place=geoGame.places[geoGame.currentRound];
-  if(!place){endGeoGame();return;}
+  const target=geoGame.places[geoGame.currentRound];
+  if(!target){endGeoGame();return;}
   geoGame.guessX=null;geoGame.guessY=null;geoGame.state='guessing';
   document.getElementById('geoRoundNum').textContent=geoGame.currentRound+1;
   document.getElementById('geoRoundTotal').textContent=geoGame.rounds;
   document.getElementById('geoScoreNum').textContent=geoGame.totalScore.toLocaleString('fr-FR');
   // Photo / illustration du lieu
   const photoWrap=document.getElementById('geoPhotoWrap');
-  photoWrap.innerHTML=buildPlaceVisual(place);
-  // Indice (caché en mode hardcore plus tard si on veut)
-  document.getElementById('geoHintText').textContent=place.hint;
+  if(target._type==='photo'||target._type==='legacy_photo'){
+    // Photo indépendante : affichage direct avec Ken Burns
+    const kbClass='kb-'+(1+Math.floor(Math.random()*4));
+    photoWrap.innerHTML=`<img class="geo-photo ${kbClass}" src="${escapeHtml(target.url)}" alt="" onerror="this.outerHTML='<div style=\\'padding:20px;text-align:center;color:#ef9a9a;\\'>⚠️ Image impossible à charger : ${escapeHtml(target.url).replace(/'/g,'&#39;')}</div>'">
+      <div class="grain"></div>
+      <div class="photo-vignette"></div>`;
+  }else{
+    // Lieu legacy avec illustration SVG par défaut (rétrocompat)
+    photoWrap.innerHTML=buildPlaceVisual(target);
+  }
+  // Indice : seulement pour les lieux legacy. Pour les photos indépendantes, pas d'indice (pur défi)
+  const hintEl=document.getElementById('geoHintText');
+  if(target._type==='photo'){
+    hintEl.textContent='Aucun indice — observe bien la photo et clique sur la carte';
+    hintEl.style.fontStyle='italic';
+    hintEl.style.opacity='.6';
+  }else{
+    hintEl.textContent=target.hint||'Observe bien la photo et clique sur la carte';
+    hintEl.style.fontStyle='';
+    hintEl.style.opacity='';
+  }
   // Carte avec les marqueurs vides
   const mapWrap=document.getElementById('geoMapWrap');
   mapWrap.classList.remove('disabled');
-  mapWrap._mapState=null; // Reset zoom au début de chaque round
+  mapWrap._mapState=null;
   mapWrap._zoomAttached=false;
   mapWrap.innerHTML=buildParkMapHTML();
   mapWrap.onclick=onGeoMapClick;
@@ -3194,9 +3352,7 @@ function renderGeoRound(){
   const btn=document.getElementById('geoConfirmBtn');
   btn.disabled=true;btn.style.display='inline-flex';
   btn.textContent='📍 Confirmer ma position';
-  // Reset reveal
   document.getElementById('geoReveal').innerHTML='';
-  // Hint message
   document.getElementById('geoMapHint').textContent='Cliquez sur la carte où vous pensez que la photo a été prise';
 }
 
@@ -3229,63 +3385,66 @@ function onGeoMapClick(ev){
 /* ─── Confirmer la supposition ─── */
 function confirmGeoGuess(){
   if(geoGame.state!=='guessing'||geoGame.guessX===null)return;
-  const place=geoGame.places[geoGame.currentRound];
-  // Distance euclidienne en % (équivalent en mètres : 1% ≈ 5m sur ~500m de parc estimé)
-  const dx=geoGame.guessX-place.x;
-  const dy=geoGame.guessY-place.y;
+  const target=geoGame.places[geoGame.currentRound];
+  // Distance euclidienne en %
+  const dx=geoGame.guessX-target.x;
+  const dy=geoGame.guessY-target.y;
   const distPct=Math.sqrt(dx*dx+dy*dy);
-  // Conversion en "mètres" approximatifs (le parc fait environ 60 hectares, soit ~750m de côté)
   const distMeters=Math.round(distPct*7.5);
-  // Score : exponentiel décroissant. 0% distance = 5000 pts, 70% = 0 pts
-  // Formule : score = 5000 * exp(-distPct/15) — plus la distance est faible, plus le score est haut
+  // Score
   let roundScore=0;
   if(distPct<=2)roundScore=5000;
-  else if(distPct<=5)roundScore=Math.round(5000-((distPct-2)/3)*500); // 5000 → 4500
-  else if(distPct<=15)roundScore=Math.round(4500-((distPct-5)/10)*2000); // 4500 → 2500
-  else if(distPct<=30)roundScore=Math.round(2500-((distPct-15)/15)*1800); // 2500 → 700
-  else if(distPct<=50)roundScore=Math.round(700-((distPct-30)/20)*600); // 700 → 100
+  else if(distPct<=5)roundScore=Math.round(5000-((distPct-2)/3)*500);
+  else if(distPct<=15)roundScore=Math.round(4500-((distPct-5)/10)*2000);
+  else if(distPct<=30)roundScore=Math.round(2500-((distPct-15)/15)*1800);
+  else if(distPct<=50)roundScore=Math.round(700-((distPct-30)/20)*600);
   else roundScore=Math.max(0,Math.round(100-(distPct-50)*5));
 
-  geoGame.guesses.push({placeId:place.id,guessX:geoGame.guessX,guessY:geoGame.guessY,distance:distMeters,score:roundScore});
+  geoGame.guesses.push({placeId:target.id,guessX:geoGame.guessX,guessY:geoGame.guessY,distance:distMeters,score:roundScore});
   geoGame.totalScore+=roundScore;
   geoGame.state='reveal';
 
-  // Animation de la carte avec les 2 marqueurs (zoom préservé)
   const mapWrap=document.getElementById('geoMapWrap');
   mapWrap.classList.add('disabled');
   mapWrap.onclick=null;
-  // Préserver l'état zoom/pan pour que le joueur puisse encore zoomer pour voir les détails
   const oldState=mapWrap._mapState?{...mapWrap._mapState}:null;
-  mapWrap.innerHTML=buildParkMapHTML({guess:{x:geoGame.guessX,y:geoGame.guessY},real:{x:place.x,y:place.y},showAll:true});
+  mapWrap.innerHTML=buildParkMapHTML({guess:{x:geoGame.guessX,y:geoGame.guessY},real:{x:target.x,y:target.y},showAll:true});
   if(oldState){mapWrap._mapState=oldState;}
   mapWrap._zoomAttached=false;
   attachMapZoom(mapWrap);
 
-  // Sons selon précision
   if(distPct<=5){burstConfetti(40);sndStreak();}
   else if(distPct<=15){burstConfetti(15);sndCorrect();}
   else if(distPct<=30)sndCorrect();
   else sndWrong();
 
-  // Mettre à jour le score affiché avec animation
   const scoreEl=document.getElementById('geoScoreNum');
   const oldScore=geoGame.totalScore-roundScore;
   animateNumber(scoreEl,oldScore,geoGame.totalScore,700);
 
-  // Afficher le panneau de révélation
   const ratingEmoji=distPct<=5?'🎯':distPct<=15?'🎉':distPct<=30?'👍':distPct<=50?'😬':'❌';
   const ratingText=distPct<=5?'Bullseye !':distPct<=15?'Excellent !':distPct<=30?'Bien':distPct<=50?'Approximatif':'Loin du compte';
+
+  // Nom à afficher : label de la photo si dispo, sinon nom du lieu, sinon générique
+  let displayName='Photo';
+  if(target._type==='photo'){
+    displayName=target.label||'Photo (sans étiquette)';
+  }else if(target.name){
+    displayName=target.name;
+  }
+  // Description : seulement pour les lieux legacy
+  const descHtml=target.desc?`<div class="geo-reveal-desc">${escapeHtml(target.desc)}</div>`:'';
 
   document.getElementById('geoReveal').innerHTML=`
     <div class="geo-reveal">
       <h3>${ratingEmoji} ${ratingText}</h3>
-      <p style="text-align:center;color:var(--gold-pale);font-size:14px;">C'était : <strong style="color:var(--gold-light);font-family:'Cinzel Decorative',cursive;font-size:18px;">${escapeHtml(place.name)}</strong></p>
+      <p style="text-align:center;color:var(--gold-pale);font-size:14px;">C'était : <strong style="color:var(--gold-light);font-family:'Cinzel Decorative',cursive;font-size:18px;">${escapeHtml(displayName)}</strong></p>
       <div class="geo-reveal-stats">
         <div class="geo-reveal-stat"><div class="v">${distMeters} m</div><div class="l">Distance</div></div>
         <div class="geo-reveal-stat score-final"><div class="v">+${roundScore.toLocaleString('fr-FR')}</div><div class="l">Points</div></div>
         <div class="geo-reveal-stat"><div class="v">${Math.round((roundScore/5000)*100)}%</div><div class="l">Précision</div></div>
       </div>
-      <div class="geo-reveal-desc">${escapeHtml(place.desc)}</div>
+      ${descHtml}
       <div class="btn-row" style="margin-top:14px;">
         ${geoGame.currentRound+1>=geoGame.rounds
           ?'<button class="btn-primary" onclick="endGeoGame()">📜 Voir le résultat final</button>'
@@ -3320,7 +3479,9 @@ function startPlacePhotosListener(){
     if(snap.exists()){
       const data=snap.data();
       _placePhotosCache=data.byPlace||{};
-      // Charger aussi les positions personnalisées si présentes
+      // Photo library (nouvelles photos indépendantes avec position propre)
+      _photoLibrary=Array.isArray(data.photos)?data.photos:[];
+      // Charger aussi les positions personnalisées si présentes (rétro-compat)
       if(data.positions){
         Object.entries(data.positions).forEach(([id,pos])=>{
           const place=PARK_PLACES.find(p=>p.id===id);
@@ -3332,6 +3493,7 @@ function startPlacePhotosListener(){
       }
     }else{
       _placePhotosCache={};
+      _photoLibrary=[];
     }
   },(err)=>{
     console.warn('placePhotos listener:',err.code);
@@ -3341,7 +3503,6 @@ function startPlacePhotosListener(){
 async function saveGameConfig(){
   if(!requireAdmin())return false;
   try{
-    // Construire l'objet positions à partir des PARK_PLACES (qui ont déjà été modifiés)
     const positions={};
     PARK_PLACES.forEach(p=>{
       positions[p.id]={x:p.x,y:p.y};
@@ -3349,6 +3510,7 @@ async function saveGameConfig(){
     await setDoc(doc(_db,'gameConfig','placePhotos'),{
       byPlace:_placePhotosCache,
       positions:positions,
+      photos:_photoLibrary,
       updatedAt:Date.now(),
       updatedBy:getSession()
     });
@@ -3360,99 +3522,131 @@ async function saveGameConfig(){
   }
 }
 
+/* ─── État du gestionnaire de photos (V3 : photos indépendantes) ─── */
+let _pmSelectedPhotoId=null;     // ID de la photo actuellement sélectionnée (édition)
+// _pmAwaitingClick : {action:'add_position'|'reposition', tempUrl?, photoId?}
+// _pmCurrentPlace conservé pour la rétrocompat mais plus utilisé activement
+
 function openPhotoManager(){
   if(!requireAdmin())return;
-  _pmCurrentPlace=PARK_PLACES[0]?.id||null;
+  _pmSelectedPhotoId=null;
   _pmAwaitingClick=null;
   renderPhotoManager();
 }
 
 function renderPhotoManager(){
-  const placeId=_pmCurrentPlace;
-  const place=PARK_PLACES.find(p=>p.id===placeId);
-  if(!place){closeModal();return;}
+  // Mode pleine refonte : grille de photos avec positions individuelles
+  const photos=_photoLibrary||[];
+  const selected=photos.find(p=>p.id===_pmSelectedPhotoId)||null;
 
-  // Liste des lieux avec compteur de photos
-  const placesNav=PARK_PLACES.map(p=>{
-    const count=(_placePhotosCache[p.id]||[]).length;
-    const sel=p.id===placeId?'sel':'';
-    return `<button class="pm-place-btn ${sel}" onclick="selectPmPlace('${jsEscape(p.id)}')">${p.ico} ${escapeHtml(p.name)} <span class="pm-count">${count}</span></button>`;
-  }).join('');
+  // Mode "en attente de clic" pour repositionner une photo OU placer une nouvelle photo
+  const isAdding=_pmAwaitingClick&&_pmAwaitingClick.action==='add_position';
+  const isRepositioning=_pmAwaitingClick&&_pmAwaitingClick.action==='reposition';
+  const isPositioning=isAdding||isRepositioning;
 
-  // Photos actuelles du lieu sélectionné
-  const photos=_placePhotosCache[placeId]||[];
-  let photosList='';
+  let banner='';
+  if(isAdding){
+    banner=`<div class="pm-positioning-banner">
+      <span>📍 Cliquez sur la carte pour placer cette photo</span>
+      <button class="btn-secondary" onclick="cancelPmPositioning()" style="font-size:10px;padding:4px 8px;">Annuler</button>
+    </div>`;
+  }else if(isRepositioning){
+    banner=`<div class="pm-positioning-banner">
+      <span>📍 Cliquez sur la carte pour REPOSITIONNER cette photo</span>
+      <button class="btn-secondary" onclick="cancelPmPositioning()" style="font-size:10px;padding:4px 8px;">Annuler</button>
+    </div>`;
+  }
+
+  // Sidebar : grille de toutes les photos
+  let photosGrid='';
   if(photos.length===0){
-    photosList='<div class="pm-empty">Aucune photo encore. L\'illustration SVG par défaut sera utilisée. Ajoute des photos ci-dessous.</div>';
+    photosGrid='<div class="pm-grid-empty">Aucune photo. Ajoute ta première photo ci-dessous.</div>';
   }else{
-    photosList=photos.map((url,i)=>{
-      const safeUrl=escapeHtml(url);
-      // Diagnostic : URL Google Maps détectée
-      const isGoogleMaps=/maps\.googleapis\.com|maps\.google|googleusercontent|streetview/i.test(url);
-      const warningTag=isGoogleMaps?'<div class="pm-warn">⚠️ URL Google détectée — peut être bloquée par Google. Préférez télécharger l\'image et l\'héberger dans votre repo.</div>':'';
-      return `<div class="pm-photo-row">
-        <img class="pm-thumb" src="${safeUrl}" onerror="this.classList.add('pm-thumb-failed');" onload="this.classList.add('pm-thumb-ok');" alt="Photo ${i+1}">
-        <div class="pm-url-wrap">
-          <div class="pm-url" title="${safeUrl}">${safeUrl}</div>
-          ${warningTag}
-        </div>
-        <a class="pm-test-btn" href="${safeUrl}" target="_blank" rel="noopener" title="Tester l'URL dans un nouvel onglet">🔗</a>
-        <button class="pm-remove" onclick="removePhoto('${jsEscape(placeId)}',${i})" title="Supprimer">✕</button>
+    photosGrid=photos.map(p=>{
+      const sel=p.id===_pmSelectedPhotoId?'sel':'';
+      const labelHtml=p.label?`<div class="pm-grid-label">${escapeHtml(p.label)}</div>`:'';
+      return `<div class="pm-grid-card ${sel}" onclick="selectPmPhoto('${jsEscape(p.id)}')" title="${escapeHtml(p.label||p.url)}">
+        <img class="pm-grid-img" src="${escapeHtml(p.url)}" onerror="this.classList.add('pm-thumb-failed');this.style.opacity='.4'" onload="this.classList.add('pm-thumb-ok')" alt="${escapeHtml(p.label||'photo')}">
+        <div class="pm-grid-pos">x:${(p.x||0).toFixed(0)} y:${(p.y||0).toFixed(0)}</div>
+        ${labelHtml}
       </div>`;
     }).join('');
   }
 
-  // Mode "en attente de clic" sur la carte
-  const isPositioning=_pmAwaitingClick&&_pmAwaitingClick.action==='reposition';
-  const positioningOverlay=isPositioning?`
-    <div class="pm-positioning-banner">
-      <span>📍 Cliquez sur la carte pour placer <strong>${escapeHtml(place.name)}</strong></span>
-      <button class="btn-secondary" onclick="cancelPmPositioning()" style="font-size:10px;padding:4px 8px;">Annuler</button>
-    </div>`:'';
+  // Panneau principal : carte avec toutes les photos en marqueurs (la sélectionnée brille) + détails de la photo sélectionnée
+  // On passe allPhotos au buildParkMapHTML pour qu'il dessine les points
+  const allPhotosForMap=photos.map(p=>({...p,_tempId:p.id}));
+  const mapHtml=buildParkMapHTML({allPhotos:allPhotosForMap,highlightId:selected?selected.id:null,showAll:false});
 
-  openModal(`<h3>🖼️ Gestionnaire de photos & positions <span class="help-bubble" tabindex="0" data-tip="Pour chaque lieu : positionne-le sur la carte (clique sur le bouton 📍) puis ajoute des photos. Le quiz Pisteur affichera ces photos à la position que tu as définie.">?</span></h3>
-    <p class="muted" style="font-size:11px;margin-bottom:10px;">Choisis un lieu à gauche, positionne-le sur la carte (clic sur 📍 puis sur la carte), puis ajoute ses photos.</p>
+  // Détails de la photo sélectionnée
+  let detailsPanel='';
+  if(selected){
+    const safeUrl=escapeHtml(selected.url);
+    const isGoogleMaps=/maps\.googleapis\.com|maps\.google|googleusercontent|streetview/i.test(selected.url);
+    const warningTag=isGoogleMaps?'<div class="pm-warn">⚠️ URL Google détectée — peut être bloquée par Google.</div>':'';
+    detailsPanel=`<div class="pm-photo-detail">
+      <div class="pm-detail-header">
+        <strong>Photo sélectionnée</strong>
+        <span class="pm-coord-info">📍 x:${(selected.x||0).toFixed(1)} · y:${(selected.y||0).toFixed(1)}</span>
+      </div>
+      <img class="pm-preview" src="${safeUrl}" onerror="this.style.opacity='.3'" alt="aperçu">
+      <div class="pm-url" title="${safeUrl}">${safeUrl}</div>
+      ${warningTag}
+      <div class="pm-detail-controls">
+        <input type="text" class="form-input" id="pmLabelInput" value="${escapeHtml(selected.label||'')}" placeholder="Étiquette (optionnel, ex: Cinéscénie vue de droite)" maxlength="80" style="margin-bottom:6px;">
+        <button class="btn-secondary" onclick="saveSelectedPhotoLabel()">💾 Enregistrer l'étiquette</button>
+      </div>
+      <div class="pm-detail-actions">
+        <button class="btn-secondary" onclick="startPmReposition('${jsEscape(selected.id)}')">📍 Repositionner</button>
+        <a class="btn-secondary" href="${safeUrl}" target="_blank" rel="noopener">🔗 Tester l'URL</a>
+        <button class="admin-action danger" onclick="deletePhotoFromLibrary('${jsEscape(selected.id)}')">🗑 Supprimer</button>
+      </div>
+    </div>`;
+  }else{
+    detailsPanel=`<div class="pm-no-selection">
+      <div class="pm-no-selection-icon">📸</div>
+      <div>Sélectionne une photo dans la grille à gauche, ou ajoute une nouvelle photo ci-dessous.</div>
+    </div>`;
+  }
+
+  openModal(`<h3>🖼️ Bibliothèque de photos <span class="help-bubble" tabindex="0" data-tip="Chaque photo est indépendante et a sa propre position sur la carte. Le quiz Pisteur pioche une photo au hasard et le joueur doit cliquer là où elle a été prise.">?</span></h3>
+    <p class="muted" style="font-size:11px;margin-bottom:10px;">Bibliothèque ${photos.length} photo${photos.length>1?'s':''}. Chaque photo a une position propre sur la carte. Le quiz pioche aléatoirement parmi les photos disponibles.</p>
     
-    <div class="pm-grid-v2">
-      <div class="pm-sidebar">
-        <div class="pm-sidebar-title">Lieux du parc</div>
-        ${placesNav}
+    <div class="pm-grid-v3">
+      <div class="pm-photos-grid-wrap">
+        <div class="pm-sidebar-title">Photos (${photos.length})</div>
+        <div class="pm-photos-grid">${photosGrid}</div>
       </div>
 
       <div class="pm-main">
-        <div class="pm-place-header">
-          <div class="pm-place-name">${place.ico} ${escapeHtml(place.name)}</div>
-          <div class="pm-place-hint">${escapeHtml(place.hint)}</div>
-        </div>
-
-        ${positioningOverlay}
+        ${banner}
 
         <div class="pm-map-section">
           <div class="pm-map-toolbar">
-            <span class="pm-coord-info">Position : <strong>x:${place.x.toFixed(1)} · y:${place.y.toFixed(1)}</strong></span>
-            <button class="btn-secondary" onclick="startPmPositioning()" ${isPositioning?'disabled':''}>📍 ${isPositioning?'Cliquez sur la carte...':'Repositionner sur la carte'}</button>
+            <span class="pm-coord-info" style="flex:1;">Carte interactive — chaque point = une photo</span>
           </div>
-          <div class="pm-map-wrap ${isPositioning?'pm-clickable':''}" id="pmMap">${buildParkMapHTML({showAll:true,highlightId:placeId})}</div>
+          <div class="pm-map-wrap ${isPositioning?'pm-clickable':''}" id="pmMap">${mapHtml}</div>
         </div>
 
-        <div class="pm-photos-section">
-          <h4>Photos (${photos.length})</h4>
-          <div class="pm-photos-list">${photosList}</div>
-          <div class="pm-add-row">
-            <input type="text" class="form-input" id="pmNewUrl" placeholder="images/cinescenie-1.png ou https://..." maxlength="2000">
-            <button class="btn-secondary" onclick="addPhotoToCurrentPlace()">➕ Ajouter</button>
-          </div>
-          <div class="pm-tips">
-            <strong>💡 Conseils</strong>
-            <ul>
-              <li><strong>Photos depuis ton repo</strong> : place tes images dans le dossier <code>images/</code> de ton repo, puis colle ici un chemin comme <code>images/cinescenie-1.png</code></li>
-              <li><strong>URL externe</strong> : tu peux aussi coller une URL HTTPS complète (Wikipedia, etc.)</li>
-              <li><strong>Formats</strong> : PNG, JPG, WebP, GIF</li>
-              <li><strong>Taille</strong> : 1280×720 max, &lt; 500 KB pour un chargement fluide</li>
-              <li><strong>Astuce</strong> : évite les photos qui montrent le nom du lieu (sinon trop facile)</li>
-            </ul>
-          </div>
-        </div>
+        ${detailsPanel}
+      </div>
+    </div>
+
+    <!-- Ajout d'une nouvelle photo -->
+    <div class="pm-add-section">
+      <strong style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:.1em;color:var(--gold);">➕ Ajouter une photo</strong>
+      <div class="pm-add-row" style="margin-top:6px;">
+        <input type="text" class="form-input" id="pmNewUrl" placeholder="images/photo.png ou https://..." maxlength="2000">
+        <button class="btn-secondary" onclick="startAddPhoto()" ${isPositioning?'disabled':''}>📍 ${isAdding?'Cliquez sur la carte...':'Choisir la position'}</button>
+      </div>
+      <div class="pm-tips">
+        <strong>💡 Comment ajouter</strong>
+        <ul>
+          <li>1. Tape l'URL ou le chemin de l'image (ex: <code>images/cinescenie-1.png</code>)</li>
+          <li>2. Clique <strong>"Choisir la position"</strong></li>
+          <li>3. Clique sur la carte là où la photo a été prise</li>
+          <li>4. Optionnel : ajoute une étiquette pour t'en souvenir</li>
+        </ul>
       </div>
     </div>
 
@@ -3460,7 +3654,6 @@ function renderPhotoManager(){
       <button class="btn-primary" onclick="closeModal()">Fermer</button>
     </div>`);
 
-  // Attacher le zoom + le listener clic sur la carte
   setTimeout(()=>{
     const mapEl=document.getElementById('pmMap');
     if(mapEl){
@@ -3473,22 +3666,39 @@ function renderPhotoManager(){
     const inp=document.getElementById('pmNewUrl');
     if(inp){
       inp.addEventListener('keydown',e=>{
-        if(e.key==='Enter')addPhotoToCurrentPlace();
+        if(e.key==='Enter')startAddPhoto();
       });
     }
   },50);
 }
 
-function selectPmPlace(placeId){
-  _pmCurrentPlace=placeId;
-  _pmAwaitingClick=null; // Annule le mode positionnement si on change de lieu
+function selectPmPhoto(photoId){
+  _pmSelectedPhotoId=photoId;
+  _pmAwaitingClick=null;
   renderPhotoManager();
 }
 
-function startPmPositioning(){
-  _pmAwaitingClick={action:'reposition'};
+function startAddPhoto(){
+  if(!requireAdmin())return;
+  const inp=document.getElementById('pmNewUrl');
+  const url=(inp?.value||'').trim();
+  if(!url){showToast('Tape d\'abord l\'URL de la photo.','error');return;}
+  if(!isSafeMediaUrl(url)){showToast('URL invalide ou dangereuse.','error');return;}
+  if(url.length>2000){showToast('URL trop longue (2000 max).','error');return;}
+  if(_photoLibrary.length>=100){showToast('Maximum 100 photos dans la bibliothèque.','error');return;}
+  if(_photoLibrary.some(p=>p.url===url)){showToast('Cette photo est déjà dans la bibliothèque.','error');return;}
+  _pmAwaitingClick={action:'add_position',tempUrl:url};
   renderPhotoManager();
-  showToast('Cliquez sur la carte pour placer le lieu','info');
+  showToast('Maintenant clique sur la carte pour la placer','info');
+}
+
+function startPmReposition(photoId){
+  if(!requireAdmin())return;
+  const photo=_photoLibrary.find(p=>p.id===photoId);
+  if(!photo)return;
+  _pmAwaitingClick={action:'reposition',photoId:photoId};
+  renderPhotoManager();
+  showToast('Clique sur la carte pour repositionner cette photo','info');
 }
 
 function cancelPmPositioning(){
@@ -3496,61 +3706,117 @@ function cancelPmPositioning(){
   renderPhotoManager();
 }
 
-function onPmMapClick(ev){
-  if(!_pmAwaitingClick||_pmAwaitingClick.action!=='reposition')return;
+async function onPmMapClick(ev){
+  if(!_pmAwaitingClick)return;
   const wrap=document.getElementById('pmMap');
   if(!wrap)return;
   if(wrap._suppressClick)return;
   if(ev.target.closest('.zoom-btn')||ev.target.closest('.zoom-controls'))return;
 
   const pct=getMapClickPercent(wrap,ev);
-  if(!pct){
-    showToast('Cliquez à l\'intérieur de la carte','info');
-    return;
-  }
+  if(!pct){showToast('Cliquez à l\'intérieur de la carte','info');return;}
   const x=Math.round(pct.x*10)/10;
   const y=Math.round(pct.y*10)/10;
 
-  // Mettre à jour la position locale immédiatement
-  const place=PARK_PLACES.find(p=>p.id===_pmCurrentPlace);
-  if(place){
-    place.x=x;
-    place.y=y;
+  if(_pmAwaitingClick.action==='add_position'){
+    // Créer une nouvelle photo
+    const newPhoto={
+      id:'ph_'+Date.now()+'_'+Math.random().toString(36).slice(2,8),
+      url:_pmAwaitingClick.tempUrl,
+      x:x,y:y,
+      label:'',
+      addedAt:Date.now(),
+      addedBy:getSession()||'unknown'
+    };
+    _photoLibrary=[..._photoLibrary,newPhoto];
+    _pmAwaitingClick=null;
+    sndClick();
+    const ok=await saveGameConfig();
+    if(ok){
+      showToast('Photo ajoutée à la bibliothèque !','success');
+      _pmSelectedPhotoId=newPhoto.id;
+      // Vider le champ
+      const inp=document.getElementById('pmNewUrl');
+      if(inp)inp.value='';
+      renderPhotoManager();
+    }else{
+      // Rollback
+      _photoLibrary=_photoLibrary.filter(p=>p.id!==newPhoto.id);
+      renderPhotoManager();
+    }
+  }else if(_pmAwaitingClick.action==='reposition'){
+    const photoId=_pmAwaitingClick.photoId;
+    const photo=_photoLibrary.find(p=>p.id===photoId);
+    if(!photo)return;
+    const oldX=photo.x,oldY=photo.y;
+    photo.x=x;photo.y=y;
+    _pmAwaitingClick=null;
+    sndClick();
+    const ok=await saveGameConfig();
+    if(ok){
+      showToast('Position mise à jour !','success');
+      renderPhotoManager();
+    }else{
+      photo.x=oldX;photo.y=oldY;
+      renderPhotoManager();
+    }
   }
-  _pmAwaitingClick=null;
-  sndClick();
+}
 
-  // Sauvegarder en Firestore
-  saveGameConfig().then(ok=>{
-    if(ok)showToast('Position enregistrée !','success');
+async function saveSelectedPhotoLabel(){
+  if(!requireAdmin())return;
+  const inp=document.getElementById('pmLabelInput');
+  if(!inp)return;
+  const label=(inp.value||'').trim().slice(0,80);
+  const photo=_photoLibrary.find(p=>p.id===_pmSelectedPhotoId);
+  if(!photo)return;
+  const oldLabel=photo.label;
+  photo.label=label;
+  const ok=await saveGameConfig();
+  if(ok){
+    showToast('Étiquette enregistrée.','success');
     renderPhotoManager();
-  });
+  }else{
+    photo.label=oldLabel;
+  }
+}
+
+async function deletePhotoFromLibrary(photoId){
+  if(!requireAdmin())return;
+  if(!confirm('Supprimer cette photo de la bibliothèque ?'))return;
+  const idx=_photoLibrary.findIndex(p=>p.id===photoId);
+  if(idx<0)return;
+  const removed=_photoLibrary[idx];
+  _photoLibrary=_photoLibrary.filter(p=>p.id!==photoId);
+  if(_pmSelectedPhotoId===photoId)_pmSelectedPhotoId=null;
+  const ok=await saveGameConfig();
+  if(ok){
+    showToast('Photo supprimée.','info');
+    renderPhotoManager();
+  }else{
+    _photoLibrary.splice(idx,0,removed);
+  }
+}
+
+/* ─── Fonctions legacy (retro-compat avec les anciennes photos par lieu) ─── */
+function selectPmPlace(placeId){
+  // Stub legacy : ne fait plus rien dans la V3, mais reste pour ne pas casser
+  _pmCurrentPlace=placeId;
+  renderPhotoManager();
+}
+
+function startPmPositioning(){
+  // Stub legacy
+  showToast('Cette fonction n\'est plus disponible. Utilise "Choisir la position" sous la grille.','info');
 }
 
 async function addPhotoToCurrentPlace(){
-  if(!requireAdmin())return;
-  const placeId=_pmCurrentPlace;
-  if(!placeId)return;
-  const inp=document.getElementById('pmNewUrl');
-  const url=(inp?.value||'').trim();
-  if(!url){showToast('Saisis une URL ou un chemin d\'image.','error');return;}
-  if(!isSafeMediaUrl(url)){showToast('URL invalide ou dangereuse.','error');return;}
-  if(url.length>2000){showToast('URL trop longue (2000 max).','error');return;}
-  const list=_placePhotosCache[placeId]||[];
-  if(list.includes(url)){showToast('Cette photo est déjà ajoutée.','error');return;}
-  if(list.length>=20){showToast('Maximum 20 photos par lieu.','error');return;}
-  _placePhotosCache[placeId]=[...list,url];
-  const ok=await saveGameConfig();
-  if(ok){
-    if(inp)inp.value='';
-    showToast('Photo ajoutée !','success');
-    renderPhotoManager();
-  }else{
-    _placePhotosCache[placeId]=list;
-  }
+  // Stub legacy — redirigé vers startAddPhoto
+  startAddPhoto();
 }
 
 async function removePhoto(placeId,idx){
+  // Stub legacy — supprime des anciennes photos par lieu si on en a
   if(!requireAdmin())return;
   const list=_placePhotosCache[placeId]||[];
   if(idx<0||idx>=list.length)return;
@@ -3558,7 +3824,7 @@ async function removePhoto(placeId,idx){
   _placePhotosCache[placeId]=[...list];
   const ok=await saveGameConfig();
   if(ok){
-    showToast('Photo retirée.','info');
+    showToast('Photo legacy retirée.','info');
     renderPhotoManager();
   }else{
     list.splice(idx,0,removed[0]);
@@ -3623,11 +3889,24 @@ async function endGeoGame(){
   // Récap rounds
   let html='';
   geoGame.guesses.forEach((g,i)=>{
-    const place=PARK_PLACES.find(p=>p.id===g.placeId);
-    const ico=place?place.ico:'📍';
+    // Retrouver le target depuis geoGame.places (par index)
+    const target=geoGame.places[i];
+    let ico='📍',name='?';
+    if(target){
+      if(target._type==='photo'){
+        ico='📸';
+        name=target.label||'Photo '+(i+1);
+      }else if(target._type==='legacy_photo'){
+        ico='📸';
+        name=target.label||'Photo';
+      }else{
+        ico=target.ico||'📍';
+        name=target.name||'?';
+      }
+    }
     html+=`<div class="geo-end-row">
       <div class="geo-end-num">${i+1}</div>
-      <div class="geo-end-name">${ico} ${escapeHtml(place?place.name:'?')}</div>
+      <div class="geo-end-name">${ico} ${escapeHtml(name)}</div>
       <div class="geo-end-dist">${g.distance} m</div>
       <div class="geo-end-pts">+${g.score.toLocaleString('fr-FR')}</div>
     </div>`;
@@ -4910,13 +5189,18 @@ window.nextGeoRound=nextGeoRound;
 window.endGeoGame=endGeoGame;
 // Calibration (anciennement, maintenant intégré dans Photo Manager)
 // startCalibration et autres fonctions de calibration ont été remplacées
-// Photo Manager (V2 unifié)
+// Photo Manager (V3 unifié — photos indépendantes)
 window.openPhotoManager=openPhotoManager;
-window.selectPmPlace=selectPmPlace;
-window.startPmPositioning=startPmPositioning;
+window.selectPmPlace=selectPmPlace;       // legacy stub
+window.selectPmPhoto=selectPmPhoto;
+window.startAddPhoto=startAddPhoto;
+window.startPmReposition=startPmReposition;
+window.startPmPositioning=startPmPositioning; // legacy stub
 window.cancelPmPositioning=cancelPmPositioning;
-window.addPhotoToCurrentPlace=addPhotoToCurrentPlace;
-window.removePhoto=removePhoto;
+window.addPhotoToCurrentPlace=addPhotoToCurrentPlace; // legacy stub
+window.removePhoto=removePhoto;            // legacy stub
+window.deletePhotoFromLibrary=deletePhotoFromLibrary;
+window.saveSelectedPhotoLabel=saveSelectedPhotoLabel;
 // Map zoom
 window.mapZoom=mapZoom;
 // Profil public
@@ -4952,6 +5236,7 @@ onAuthStateChanged(_auth,async (user)=>{
       if(_placePhotosUnsubscribe){_placePhotosUnsubscribe();_placePhotosUnsubscribe=null;}
       _usersCache={};
       _placePhotosCache={};
+      _photoLibrary=[];
       const tb=document.getElementById('topbar');if(tb)tb.style.display='none';
       showLoading(false);
       if(_firebaseReady){
