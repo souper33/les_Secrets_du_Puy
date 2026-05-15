@@ -8,6 +8,9 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="robots" content="noindex,nofollow">
 <title>Quiz Puy du Fou — Le Grand Défi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" href="carte.webp" fetchpriority="low">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -329,7 +332,42 @@ input,textarea{cursor:text;}
 .profile-stat .l{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,217,138,.55);margin-top:5px;}
 
 /* ════════════════════════════════════════════════════════════ */
-/* ─────────────── STATISTIQUES ÉTENDUES ─────────────────────── */
+/* ─────────────── TOUR GUIDÉ (Onboarding) ─────────────────── */
+/* ════════════════════════════════════════════════════════════ */
+
+.tour-overlay{position:fixed;inset:0;z-index:9999;pointer-events:none;}
+.tour-overlay.active{pointer-events:auto;}
+/* Le masque (4 rectangles autour du spotlight pour assombrir le reste) */
+.tour-mask{position:fixed;background:rgba(10,6,2,.78);pointer-events:auto;transition:all .4s cubic-bezier(.2,.9,.3,1);}
+/* Anneau lumineux autour du spotlight */
+.tour-spotlight{position:fixed;border-radius:8px;box-shadow:0 0 0 4px rgba(232,184,75,.8),0 0 32px rgba(232,184,75,.6),inset 0 0 12px rgba(232,184,75,.2);pointer-events:none;transition:all .4s cubic-bezier(.2,.9,.3,1);animation:tourPulse 2s ease-in-out infinite;}
+@keyframes tourPulse{0%,100%{box-shadow:0 0 0 4px rgba(232,184,75,.8),0 0 32px rgba(232,184,75,.6),inset 0 0 12px rgba(232,184,75,.2);}50%{box-shadow:0 0 0 5px rgba(232,184,75,1),0 0 40px rgba(232,184,75,.85),inset 0 0 16px rgba(232,184,75,.3);}}
+/* Bulle d'info du tour */
+.tour-bubble{position:fixed;max-width:340px;background:linear-gradient(135deg,rgba(40,28,12,.98),rgba(20,14,6,.98));border:1px solid var(--gold);border-radius:8px;padding:16px 18px;box-shadow:0 12px 40px rgba(0,0,0,.7),0 0 28px rgba(201,146,42,.3);pointer-events:auto;animation:tourBubbleIn .4s cubic-bezier(.2,.9,.3,1) backwards;}
+@media(max-width:520px){.tour-bubble{max-width:88vw;}}
+@keyframes tourBubbleIn{from{opacity:0;transform:translateY(8px) scale(.96);}to{opacity:1;transform:none;}}
+.tour-step{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.15em;color:var(--gold);text-transform:uppercase;margin-bottom:4px;opacity:.7;}
+.tour-title{font-family:'Cinzel Decorative',cursive;font-size:18px;color:var(--gold-light);margin-bottom:8px;line-height:1.2;}
+.tour-text{font-family:'EB Garamond',serif;font-size:14px;color:var(--parchment);line-height:1.55;margin-bottom:14px;}
+.tour-progress{display:flex;gap:4px;margin-bottom:14px;}
+.tour-progress-dot{flex:1;height:3px;background:rgba(201,146,42,.2);border-radius:2px;transition:background .3s;}
+.tour-progress-dot.done{background:rgba(201,146,42,.6);}
+.tour-progress-dot.current{background:var(--gold-light);box-shadow:0 0 6px rgba(232,184,75,.5);}
+.tour-actions{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;}
+.tour-btn{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.06em;padding:8px 14px;border-radius:4px;cursor:pointer;text-transform:uppercase;transition:all .15s;font-weight:600;border:1px solid transparent;}
+.tour-btn-primary{background:linear-gradient(135deg,#8B5E0A,#E8B84B 50%,#C9922A);color:#1a1108;border-color:rgba(232,184,75,.6);box-shadow:0 2px 8px rgba(232,184,75,.25);}
+.tour-btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(232,184,75,.4);}
+.tour-btn-secondary{background:transparent;color:rgba(245,217,138,.7);border-color:rgba(201,146,42,.3);}
+.tour-btn-secondary:hover{color:var(--gold-light);border-color:var(--gold);}
+.tour-skip{margin-left:auto;background:transparent;border:none;color:rgba(245,217,138,.4);font-family:'EB Garamond',serif;font-size:12px;font-style:italic;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
+.tour-skip:hover{color:rgba(245,217,138,.7);}
+/* Petite flèche qui pointe vers la cible */
+.tour-arrow{position:fixed;width:0;height:0;pointer-events:none;}
+.tour-arrow-up{border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:10px solid var(--gold);}
+.tour-arrow-down{border-left:8px solid transparent;border-right:8px solid transparent;border-top:10px solid var(--gold);}
+.tour-arrow-left{border-top:8px solid transparent;border-bottom:8px solid transparent;border-right:10px solid var(--gold);}
+.tour-arrow-right{border-top:8px solid transparent;border-bottom:8px solid transparent;border-left:10px solid var(--gold);}
+/* ════════════════════════════════════════════════════════════ */
 /* ════════════════════════════════════════════════════════════ */
 
 #extendedStats{margin:18px 0;}
@@ -709,7 +747,7 @@ input,textarea{cursor:text;}
 .pm-map-toolbar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;}
 .pm-coord-info{font-size:11px;color:rgba(245,217,138,.6);font-family:'EB Garamond',serif;}
 .pm-coord-info strong{color:var(--gold-light);font-family:monospace;}
-.pm-map-wrap{position:relative;width:100%;border:2px solid rgba(201,146,42,.4);border-radius:6px;overflow:hidden;background:#1a1108;height:380px;}
+.pm-map-wrap{position:relative;width:100%;border:2px solid rgba(201,146,42,.4);border-radius:6px;overflow:hidden;background:#1a1108;aspect-ratio:2/3;min-height:360px;}
 .pm-map-wrap.pm-clickable{cursor:crosshair;border-color:var(--gold-light);box-shadow:0 0 18px rgba(232,184,75,.3);}
 
 /* Section photos */
@@ -815,7 +853,7 @@ input,textarea{cursor:text;}
 /* Carte du parc */
 .geo-map-section{margin-top:18px;}
 .geo-map-title{text-align:center;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);opacity:.85;margin-bottom:8px;}
-.geo-map-wrap{position:relative;width:100%;border:2px solid rgba(201,146,42,.5);border-radius:8px;overflow:hidden;background:#1A1108;cursor:crosshair;box-shadow:0 8px 32px rgba(0,0,0,.5);min-height:300px;aspect-ratio:4/3;}
+.geo-map-wrap{position:relative;width:100%;border:2px solid rgba(201,146,42,.5);border-radius:8px;overflow:hidden;background:#1A1108;cursor:crosshair;box-shadow:0 8px 32px rgba(0,0,0,.5);min-height:320px;aspect-ratio:2/3;}
 .geo-map-wrap.disabled{cursor:default;}
 .geo-map-svg{width:100%;height:100%;display:block;user-select:none;}
 .geo-map-svg .place-marker{cursor:pointer;}
@@ -844,8 +882,11 @@ input,textarea{cursor:text;}
 .zoom-btn:hover:not(:disabled){background:linear-gradient(135deg,rgba(40,28,12,.95),rgba(60,42,18,.95));border-color:var(--gold-light);box-shadow:0 4px 12px rgba(232,184,75,.3);}
 .zoom-btn:active:not(:disabled){transform:translateY(1px);}
 .zoom-btn:disabled{opacity:.4;cursor:not-allowed;}
-.zoom-level{position:absolute;bottom:8px;right:8px;background:rgba(20,14,6,.85);border:1px solid rgba(201,146,42,.4);color:var(--gold-pale);font-family:'Cinzel',serif;font-size:10px;letter-spacing:.08em;padding:3px 8px;border-radius:3px;pointer-events:none;z-index:10;text-transform:uppercase;}
-.zoom-hint{position:absolute;bottom:8px;left:8px;background:rgba(20,14,6,.75);color:rgba(245,217,138,.6);font-size:10px;padding:3px 8px;border-radius:3px;pointer-events:none;z-index:10;font-style:italic;font-family:'EB Garamond',serif;}
+/* Badge zoom level : DISCRET et POSITIONNÉ EN HAUT-GAUCHE pour ne pas gêner le bas de la carte */
+.zoom-level{position:absolute;top:8px;left:8px;background:rgba(20,14,6,.7);border:1px solid rgba(201,146,42,.3);color:var(--gold-pale);font-family:'Cinzel',serif;font-size:9px;letter-spacing:.05em;padding:2px 6px;border-radius:3px;pointer-events:none;z-index:10;text-transform:uppercase;opacity:.7;}
+/* Hint : discret et fade out après quelques secondes pour ne pas gêner */
+.zoom-hint{position:absolute;top:42px;left:8px;background:rgba(20,14,6,.6);color:rgba(245,217,138,.5);font-size:9px;padding:2px 6px;border-radius:3px;pointer-events:none;z-index:10;font-style:italic;font-family:'EB Garamond',serif;animation:hintFade 6s ease-out forwards;}
+@keyframes hintFade{0%,40%{opacity:1;}100%{opacity:0;visibility:hidden;}}
 
 /* Curseur cohérent selon mode */
 .geo-map-wrap.zoom-pan-mode{cursor:grab;}
@@ -1090,10 +1131,10 @@ input,textarea{cursor:text;}
       Banque : <span id="homeTotalQ">?</span> questions &nbsp;·&nbsp; Restantes : <span id="homeUnseen">?</span>
     </div>
     <div class="btn-row">
-      <button class="btn-primary" onclick="navTo('quiz-setup')">⚔️ Lancer un quiz</button>
-      <button class="btn-primary" onclick="navTo('geo-setup')" style="background:linear-gradient(135deg,#5C4033,#A0522D 40%,#D2691E 60%,#A0522D);">🗺️ Le Pisteur</button>
-      <button class="btn-secondary" onclick="navTo('leaderboard')">🏆 Classement</button>
-      <button class="btn-secondary" onclick="navTo('profile')">👤 Mon profil</button>
+      <button class="btn-primary" data-tour="quiz" onclick="navTo('quiz-setup')">⚔️ Lancer un quiz</button>
+      <button class="btn-primary" data-tour="pisteur" onclick="navTo('geo-setup')" style="background:linear-gradient(135deg,#5C4033,#A0522D 40%,#D2691E 60%,#A0522D);">🗺️ Le Pisteur</button>
+      <button class="btn-secondary" data-tour="leaderboard" onclick="navTo('leaderboard')">🏆 Classement</button>
+      <button class="btn-secondary" data-tour="profile" onclick="navTo('profile')">👤 Mon profil</button>
     </div>
     <div class="citation" id="homeCitation"></div>
   </div>
@@ -1386,6 +1427,7 @@ input,textarea{cursor:text;}
     <div class="info-box" id="profileNextGrade"></div>
     <div class="btn-row">
       <button class="btn-secondary" onclick="changeMyPassword()">🔑 Changer le mot de passe</button>
+      <button class="btn-secondary" onclick="startGuidedTour(true)">🎓 Revoir le tour guidé</button>
       <button class="btn-secondary" onclick="navTo('home')">← Retour</button>
     </div>
   </div>
@@ -1478,7 +1520,7 @@ input,textarea{cursor:text;}
         <span class="help-bubble" tabindex="0" data-tip="Liste de tous les chevaliers inscrits. Pour chaque compte vous pouvez : modifier les titres honorifiques, ajuster l'XP, réinitialiser les statistiques, promouvoir/rétrograder admin, ou supprimer le compte.">?</span>
       </h3>
       <div class="admin-users-bar">
-        <input type="text" class="form-input" id="adminUserSearch" placeholder="🔍 Rechercher un chevalier..." oninput="renderAdminUsers()">
+        <input type="text" class="form-input" id="adminUserSearch" placeholder="🔍 Rechercher un chevalier..." oninput="debouncedRenderAdminUsers()">
       </div>
       <div id="adminUserList"></div>
     </div>
@@ -2101,8 +2143,13 @@ const KEY_SOUND='pdf_sound_v1';
 
 /* ══════════════════ INACTIVITY AUTO-LOGOUT (30 min) ══════════════════ */
 const INACTIVITY_MS=30*60*1000;
+let _lastActivityTouch=0;
 function touchActivity(){
-  try{localStorage.setItem(KEY_ACTIVITY,String(Date.now()));}catch(e){}
+  // Throttle : maximum 1 écriture par 2 secondes
+  const now=Date.now();
+  if(now-_lastActivityTouch<2000)return;
+  _lastActivityTouch=now;
+  try{localStorage.setItem(KEY_ACTIVITY,String(now));}catch(e){}
 }
 function checkInactivity(){
   if(!_firebaseUser)return;
@@ -2114,7 +2161,8 @@ function checkInactivity(){
   }
 }
 function initActivityTracking(){
-  ['click','keydown','mousemove','touchstart','scroll'].forEach(ev=>{
+  // mousemove retiré : trop bruyant pour aucun bénéfice. Les autres events captent largement.
+  ['click','keydown','touchstart','scroll'].forEach(ev=>{
     document.addEventListener(ev,touchActivity,{passive:true,capture:true});
   });
   setInterval(checkInactivity,60*1000);
@@ -2924,7 +2972,7 @@ function buildParkMapHTML(opts={}){
   let html=`<div class="geo-map-img-wrap">
     <div class="geo-map-img-inner">
       <div class="geo-map-content">
-        <img class="geo-map-img" src="${escapeHtml(url)}" alt="Carte du Puy du Fou" draggable="false" data-fb="${escapeHtml(fallback)}" onerror="if(this.dataset.fb&&this.src.indexOf(this.dataset.fb)===-1){this.src=this.dataset.fb;}else{this.style.display='none';this.closest('.geo-map-img-wrap').classList.add('img-failed');}">
+        <img class="geo-map-img" src="${escapeHtml(url)}" alt="Carte du Puy du Fou" draggable="false" decoding="async" data-fb="${escapeHtml(fallback)}" onerror="if(this.dataset.fb&&this.src.indexOf(this.dataset.fb)===-1){this.src=this.dataset.fb;}else{this.style.display='none';this.closest('.geo-map-img-wrap').classList.add('img-failed');}">
         <svg class="geo-map-overlay" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">`;
 
   // Marqueurs des lieux (mode reveal)
@@ -3066,14 +3114,67 @@ function mapZoom(btn,action){
   else if(action==='reset'){state.zoom=1;state.tx=0;state.ty=0;applyMapTransform(wrap);}
 }
 
-/* Attache le système de zoom + pan à un élément wrap (le `<div>` qui contient .geo-map-img-wrap) */
+/* Listeners globaux UNIQUES (créés une seule fois pour tout le document) */
+const _mapZoomGlobalState={
+  activeWrap:null,
+  isDragging:false,
+  startX:0,startY:0,startTx:0,startTy:0,didDrag:false,
+  rafPending:false,
+  pendingDx:0,pendingDy:0
+};
+function _mapZoomGlobalMouseMove(e){
+  const g=_mapZoomGlobalState;
+  if(!g.isDragging||!g.activeWrap)return;
+  const dx=e.clientX-g.startX, dy=e.clientY-g.startY;
+  if(Math.abs(dx)>3||Math.abs(dy)>3)g.didDrag=true;
+  g.pendingDx=dx;g.pendingDy=dy;
+  // Throttle : on n'applique que sur frame suivante via rAF
+  if(g.rafPending)return;
+  g.rafPending=true;
+  requestAnimationFrame(()=>{
+    g.rafPending=false;
+    const w=g.activeWrap;
+    if(!w||!g.isDragging)return;
+    const state=getMapState(w);
+    state.tx=g.startTx+g.pendingDx;
+    state.ty=g.startTy+g.pendingDy;
+    clampPan(w);
+    applyMapTransform(w);
+  });
+}
+function _mapZoomGlobalMouseUp(){
+  const g=_mapZoomGlobalState;
+  if(!g.isDragging)return;
+  const w=g.activeWrap;
+  g.isDragging=false;
+  g.activeWrap=null;
+  if(!w)return;
+  w.classList.remove('dragging');
+  w.querySelector('.geo-map-img-inner')?.classList.remove('dragging');
+  if(g.didDrag){
+    w._suppressClick=true;
+    setTimeout(()=>{w._suppressClick=false;},10);
+  }
+}
+// Attache les listeners globaux UNE seule fois
+let _mapZoomGlobalAttached=false;
+function _ensureMapZoomGlobals(){
+  if(_mapZoomGlobalAttached)return;
+  _mapZoomGlobalAttached=true;
+  document.addEventListener('mousemove',_mapZoomGlobalMouseMove,{passive:true});
+  document.addEventListener('mouseup',_mapZoomGlobalMouseUp);
+}
+
+/* Attache le système de zoom + pan à un élément wrap (le `<div>` qui contient .geo-map-img-wrap).
+   PROPRE : listeners locaux uniquement, pas de memory leak quand on re-render. */
 function attachMapZoom(wrap){
   if(!wrap||wrap._zoomAttached)return;
   wrap._zoomAttached=true;
   wrap.classList.add('zoom-pan-mode');
   applyMapTransform(wrap);
+  _ensureMapZoomGlobals();
 
-  // ─── Molette (desktop)
+  // ─── Molette (desktop) — listener LOCAL au wrap (sera GC quand le wrap est retiré)
   wrap.addEventListener('wheel',(e)=>{
     e.preventDefault();
     const rect=wrap.getBoundingClientRect();
@@ -3084,50 +3185,32 @@ function attachMapZoom(wrap){
     setZoom(wrap,state.zoom*factor,mouseX,mouseY);
   },{passive:false});
 
-  // ─── Drag souris (desktop)
-  let isDragging=false,startX=0,startY=0,startTx=0,startTy=0,didDrag=false;
+  // ─── Mousedown : démarre le drag (les listeners move/up sont GLOBAUX et uniques)
   wrap.addEventListener('mousedown',(e)=>{
     if(e.button!==0)return;
-    isDragging=true;didDrag=false;
+    const g=_mapZoomGlobalState;
+    g.activeWrap=wrap;
+    g.isDragging=true;
+    g.didDrag=false;
     const state=getMapState(wrap);
-    startX=e.clientX;startY=e.clientY;
-    startTx=state.tx;startTy=state.ty;
+    g.startX=e.clientX;g.startY=e.clientY;
+    g.startTx=state.tx;g.startTy=state.ty;
     wrap.classList.add('dragging');
     wrap.querySelector('.geo-map-img-inner')?.classList.add('dragging');
   });
-  document.addEventListener('mousemove',(e)=>{
-    if(!isDragging)return;
-    const dx=e.clientX-startX, dy=e.clientY-startY;
-    if(Math.abs(dx)>3||Math.abs(dy)>3)didDrag=true;
-    const state=getMapState(wrap);
-    state.tx=startTx+dx;
-    state.ty=startTy+dy;
-    clampPan(wrap);
-    applyMapTransform(wrap);
-  });
-  document.addEventListener('mouseup',()=>{
-    if(isDragging){
-      isDragging=false;
-      wrap.classList.remove('dragging');
-      wrap.querySelector('.geo-map-img-inner')?.classList.remove('dragging');
-      // Si l'utilisateur a vraiment glissé (pas juste cliqué), on bloque le clic suivant
-      if(didDrag){
-        wrap._suppressClick=true;
-        setTimeout(()=>{wrap._suppressClick=false;},10);
-      }
-    }
-  });
 
-  // ─── Touch (mobile) : pan à 1 doigt, zoom à 2 doigts
+  // ─── Touch (mobile) : pan à 1 doigt, zoom à 2 doigts — listeners LOCAUX
   let touchStartDist=0,touchStartZoom=1,touchStartCx=0,touchStartCy=0;
-  let touchLastX=0,touchLastY=0,touchStartTx=0,touchStartTy=0;
+  let touchLastX=0,touchLastY=0,touchStartTx=0,touchStartTy=0,touchDidDrag=false;
+  let touchRafPending=false;
   wrap.addEventListener('touchstart',(e)=>{
     const state=getMapState(wrap);
     if(e.touches.length===1){
       touchLastX=e.touches[0].clientX;
       touchLastY=e.touches[0].clientY;
       touchStartTx=state.tx;touchStartTy=state.ty;
-      didDrag=false;
+      touchDidDrag=false;
+      touchStartDist=0;
     }else if(e.touches.length===2){
       const dx=e.touches[0].clientX-e.touches[1].clientX;
       const dy=e.touches[0].clientY-e.touches[1].clientY;
@@ -3142,18 +3225,20 @@ function attachMapZoom(wrap){
     const state=getMapState(wrap);
     if(e.touches.length===1&&touchStartDist===0){
       e.preventDefault();
-      const dx=e.touches[0].clientX-touchLastX;
-      const dy=e.touches[0].clientY-touchLastY;
-      if(Math.abs(dx)>3||Math.abs(dy)>3)didDrag=true;
-      state.tx=touchStartTx+(e.touches[0].clientX-touchLastX+touchStartTx-state.tx);
-      state.ty=touchStartTy+(e.touches[0].clientY-touchLastY+touchStartTy-state.ty);
-      // Plus simple : delta cumulé
-      state.tx+=(e.touches[0].clientX-touchLastX);
-      state.ty+=(e.touches[0].clientY-touchLastY);
-      touchLastX=e.touches[0].clientX;
-      touchLastY=e.touches[0].clientY;
-      clampPan(wrap);
-      applyMapTransform(wrap);
+      const newX=e.touches[0].clientX;
+      const newY=e.touches[0].clientY;
+      const dx=newX-touchLastX, dy=newY-touchLastY;
+      if(Math.abs(dx)>3||Math.abs(dy)>3)touchDidDrag=true;
+      state.tx+=dx;state.ty+=dy;
+      touchLastX=newX;touchLastY=newY;
+      // Throttle rAF
+      if(touchRafPending)return;
+      touchRafPending=true;
+      requestAnimationFrame(()=>{
+        touchRafPending=false;
+        clampPan(wrap);
+        applyMapTransform(wrap);
+      });
     }else if(e.touches.length===2){
       e.preventDefault();
       const dx=e.touches[0].clientX-e.touches[1].clientX;
@@ -3167,7 +3252,7 @@ function attachMapZoom(wrap){
   },{passive:false});
   wrap.addEventListener('touchend',()=>{
     touchStartDist=0;
-    if(didDrag){
+    if(touchDidDrag){
       wrap._suppressClick=true;
       setTimeout(()=>{wrap._suppressClick=false;},10);
     }
@@ -3182,21 +3267,26 @@ function attachMapZoom(wrap){
 
 /* Convertit des coordonnées d'événement clic en pourcentages 0-100 sur la carte,
    en tenant compte du zoom et du pan. Utilise .geo-map-content qui a EXACTEMENT
-   les mêmes dimensions que l'image (et que le SVG par-dessus). */
+   les mêmes dimensions que l'image (et que le SVG par-dessus).
+   Tolérance de 20px à l'extérieur (clamp doux) pour éviter de refuser les clics au bord. */
 function getMapClickPercent(wrap,ev){
   const content=wrap.querySelector('.geo-map-content');
   const img=wrap.querySelector('.geo-map-img');
   if(!content||!img||!img.naturalWidth)return null;
 
-  // Position du clic dans le viewport, puis dans le content
   const contentRect=content.getBoundingClientRect();
-  const relX=ev.clientX-contentRect.left;
-  const relY=ev.clientY-contentRect.top;
+  const w=contentRect.width, h=contentRect.height;
+  if(w<=0||h<=0)return null;
+  let relX=ev.clientX-contentRect.left;
+  let relY=ev.clientY-contentRect.top;
 
-  // contentRect.width et height sont déjà transformés par le zoom
-  // Pour avoir un pourcentage 0-100 sur l'image, il suffit de diviser
-  if(relX<0||relX>contentRect.width||relY<0||relY>contentRect.height)return null;
-  return {x:(relX/contentRect.width)*100, y:(relY/contentRect.height)*100};
+  // Tolérance : si on clique légèrement en dehors (par ex. à cause d'aspect-ratio imparfait), on clamp au bord
+  const TOL=20;
+  if(relX<-TOL||relX>w+TOL||relY<-TOL||relY>h+TOL)return null;
+  relX=Math.max(0,Math.min(w,relX));
+  relY=Math.max(0,Math.min(h,relY));
+
+  return {x:(relX/w)*100, y:(relY/h)*100};
 }
 
 /* ─── Ancienne carte SVG dessinée (gardée comme fallback si l'image ne charge pas) ─── */
@@ -3566,7 +3656,7 @@ function renderPhotoManager(){
       const sel=p.id===_pmSelectedPhotoId?'sel':'';
       const labelHtml=p.label?`<div class="pm-grid-label">${escapeHtml(p.label)}</div>`:'';
       return `<div class="pm-grid-card ${sel}" onclick="selectPmPhoto('${jsEscape(p.id)}')" title="${escapeHtml(p.label||p.url)}">
-        <img class="pm-grid-img" src="${escapeHtml(p.url)}" onerror="this.classList.add('pm-thumb-failed');this.style.opacity='.4'" onload="this.classList.add('pm-thumb-ok')" alt="${escapeHtml(p.label||'photo')}">
+        <img class="pm-grid-img" src="${escapeHtml(p.url)}" loading="lazy" decoding="async" onerror="this.classList.add('pm-thumb-failed');this.style.opacity='.4'" onload="this.classList.add('pm-thumb-ok')" alt="${escapeHtml(p.label||'photo')}">
         <div class="pm-grid-pos">x:${(p.x||0).toFixed(0)} y:${(p.y||0).toFixed(0)}</div>
         ${labelHtml}
       </div>`;
@@ -5139,6 +5229,235 @@ window.sendResetEmail=sendResetEmail;
 window.switchAuthTab=switchAuthTab;
 window.confirmLogout=confirmLogout;
 window.doLogout=doLogout;
+/* ══════════════════════════════════════════════════════════════ */
+/* ═══════════════════ TOUR GUIDÉ (ONBOARDING) ═════════════════ */
+/* ══════════════════════════════════════════════════════════════ */
+
+const TOUR_STEPS=[
+  {
+    target:null, // pas de spotlight, centré écran
+    title:'Bienvenue au Puy du Fou !',
+    text:'Voici un petit tour rapide pour découvrir le site. Tu peux le passer à tout moment, mais ça vaut le coup de jeter un œil — moins d\'une minute. Allez !',
+    nextLabel:'C\'est parti ⚔️'
+  },
+  {
+    target:'[data-tour="quiz"]',
+    title:'Le Quiz classique',
+    text:'Lance des séries de 15 à 30 questions sur l\'histoire du Puy du Fou. Choisis la difficulté et le mode (Classique, Blitz pour les rapides, ou Marathon pour les endurants).',
+    nextLabel:'Suivant'
+  },
+  {
+    target:'[data-tour="pisteur"]',
+    title:'Le Pisteur',
+    text:'Un mode unique : une photo du parc apparaît, et tu dois deviner sur la carte où elle a été prise. Plus tu es précis, plus tu gagnes d\'XP !',
+    nextLabel:'Suivant'
+  },
+  {
+    target:'[data-tour="leaderboard"]',
+    title:'Le Classement',
+    text:'Compare-toi aux autres chevaliers. Clique sur un nom pour voir son profil détaillé, ses records et ses titres.',
+    nextLabel:'Suivant'
+  },
+  {
+    target:'[data-tour="profile"]',
+    title:'Ton Profil',
+    text:'Retrouve tes stats détaillées, ton XP, ton grade, tes hauts faits débloqués, et un historique de tes parties. C\'est ici que tu vois ta progression.',
+    nextLabel:'Suivant'
+  },
+  {
+    target:null,
+    title:'À toi de jouer !',
+    text:'Joue régulièrement pour grimper les 20 grades — du Manant au Mythe Vivant. Débloque des hauts faits, gagne des titres honorifiques. Et n\'oublie pas : chaque jour de jeu compte (série quotidienne) 🔥',
+    nextLabel:'Commencer 🏆'
+  }
+];
+
+let _tourState={active:false,step:0,el:null};
+
+function startGuidedTour(force=false){
+  if(_tourState.active)return;
+  const u=currentUser();
+  if(!force&&u&&u.hasSeenTour)return; // Déjà vu
+  // S'assurer d'être sur la home
+  navTo('home');
+  setTimeout(()=>{
+    _tourState.active=true;
+    _tourState.step=0;
+    buildTourDOM();
+    showTourStep(0);
+  },300);
+}
+
+function buildTourDOM(){
+  if(_tourState.el){_tourState.el.remove();_tourState.el=null;}
+  const ov=document.createElement('div');
+  ov.className='tour-overlay active';
+  ov.id='tourOverlay';
+  ov.innerHTML=`
+    <div class="tour-mask" id="tourMaskTop"></div>
+    <div class="tour-mask" id="tourMaskBottom"></div>
+    <div class="tour-mask" id="tourMaskLeft"></div>
+    <div class="tour-mask" id="tourMaskRight"></div>
+    <div class="tour-spotlight" id="tourSpotlight" style="display:none;"></div>
+    <div class="tour-bubble" id="tourBubble"></div>
+  `;
+  document.body.appendChild(ov);
+  _tourState.el=ov;
+}
+
+function showTourStep(idx){
+  if(idx<0||idx>=TOUR_STEPS.length){endTour();return;}
+  _tourState.step=idx;
+  const step=TOUR_STEPS[idx];
+  const bubble=document.getElementById('tourBubble');
+  const spotlight=document.getElementById('tourSpotlight');
+  if(!bubble||!spotlight)return;
+
+  // Trouver la cible
+  let targetEl=null;
+  if(step.target){
+    targetEl=document.querySelector(step.target);
+    if(targetEl){
+      const rect=targetEl.getBoundingClientRect();
+      // Positionner le spotlight
+      const pad=6;
+      spotlight.style.display='block';
+      spotlight.style.left=(rect.left-pad)+'px';
+      spotlight.style.top=(rect.top-pad)+'px';
+      spotlight.style.width=(rect.width+pad*2)+'px';
+      spotlight.style.height=(rect.height+pad*2)+'px';
+      updateTourMasks(rect,pad);
+    }else{
+      spotlight.style.display='none';
+      hideTourMasks();
+    }
+  }else{
+    spotlight.style.display='none';
+    hideTourMasks();
+  }
+
+  // Progress dots
+  const dotsHtml=TOUR_STEPS.map((_,i)=>{
+    let cls='tour-progress-dot';
+    if(i<idx)cls+=' done';
+    else if(i===idx)cls+=' current';
+    return `<div class="${cls}"></div>`;
+  }).join('');
+
+  // Bouton précédent uniquement si on n'est pas au début
+  const prevBtn=idx>0?`<button class="tour-btn tour-btn-secondary" onclick="tourPrev()">← Précédent</button>`:'';
+  // Bouton suivant ou terminer
+  const isLast=idx===TOUR_STEPS.length-1;
+  const nextBtn=`<button class="tour-btn tour-btn-primary" onclick="${isLast?'endTour(true)':'tourNext()'}">${step.nextLabel}</button>`;
+  const skipBtn=!isLast?`<button class="tour-skip" onclick="endTour(true)">Passer le tour</button>`:'';
+
+  bubble.innerHTML=`
+    <div class="tour-step">Étape ${idx+1} sur ${TOUR_STEPS.length}</div>
+    <div class="tour-title">${escapeHtml(step.title)}</div>
+    <div class="tour-text">${step.text}</div>
+    <div class="tour-progress">${dotsHtml}</div>
+    <div class="tour-actions">
+      ${prevBtn}${nextBtn}${skipBtn}
+    </div>
+  `;
+
+  // Position de la bulle
+  positionTourBubble(targetEl,bubble);
+}
+
+function positionTourBubble(target,bubble){
+  bubble.style.opacity='0';
+  // Force layout pour avoir les dimensions de la bulle
+  requestAnimationFrame(()=>{
+    const bw=bubble.offsetWidth, bh=bubble.offsetHeight;
+    const vw=window.innerWidth, vh=window.innerHeight;
+    let left,top;
+    if(!target){
+      // Centré
+      left=(vw-bw)/2;
+      top=(vh-bh)/2;
+    }else{
+      const rect=target.getBoundingClientRect();
+      const gap=24;
+      // Essai : en-dessous de la cible
+      if(rect.bottom+gap+bh<vh){
+        top=rect.bottom+gap;
+        left=Math.max(10,Math.min(vw-bw-10,rect.left+rect.width/2-bw/2));
+      }
+      // Sinon : au-dessus
+      else if(rect.top-gap-bh>0){
+        top=rect.top-gap-bh;
+        left=Math.max(10,Math.min(vw-bw-10,rect.left+rect.width/2-bw/2));
+      }
+      // Sinon : à droite
+      else if(rect.right+gap+bw<vw){
+        left=rect.right+gap;
+        top=Math.max(10,Math.min(vh-bh-10,rect.top+rect.height/2-bh/2));
+      }
+      // Sinon : à gauche
+      else if(rect.left-gap-bw>0){
+        left=rect.left-gap-bw;
+        top=Math.max(10,Math.min(vh-bh-10,rect.top+rect.height/2-bh/2));
+      }
+      // Dernier recours : centré
+      else{
+        left=(vw-bw)/2;
+        top=(vh-bh)/2;
+      }
+    }
+    bubble.style.left=left+'px';
+    bubble.style.top=top+'px';
+    bubble.style.opacity='1';
+  });
+}
+
+function updateTourMasks(rect,pad){
+  const top=Math.max(0,rect.top-pad);
+  const bottom=rect.bottom+pad;
+  const left=Math.max(0,rect.left-pad);
+  const right=rect.right+pad;
+  const mTop=document.getElementById('tourMaskTop');
+  const mBot=document.getElementById('tourMaskBottom');
+  const mL=document.getElementById('tourMaskLeft');
+  const mR=document.getElementById('tourMaskRight');
+  if(mTop){mTop.style.left='0';mTop.style.top='0';mTop.style.width='100vw';mTop.style.height=top+'px';}
+  if(mBot){mBot.style.left='0';mBot.style.top=bottom+'px';mBot.style.width='100vw';mBot.style.height='calc(100vh - '+bottom+'px)';}
+  if(mL){mL.style.left='0';mL.style.top=top+'px';mL.style.width=left+'px';mL.style.height=(bottom-top)+'px';}
+  if(mR){mR.style.left=right+'px';mR.style.top=top+'px';mR.style.width='calc(100vw - '+right+'px)';mR.style.height=(bottom-top)+'px';}
+}
+
+function hideTourMasks(){
+  // Quand pas de spotlight, on couvre tout l'écran avec le mask du top
+  const mTop=document.getElementById('tourMaskTop');
+  const mBot=document.getElementById('tourMaskBottom');
+  const mL=document.getElementById('tourMaskLeft');
+  const mR=document.getElementById('tourMaskRight');
+  if(mTop){mTop.style.left='0';mTop.style.top='0';mTop.style.width='100vw';mTop.style.height='100vh';}
+  if(mBot){mBot.style.height='0';}
+  if(mL){mL.style.width='0';}
+  if(mR){mR.style.width='0';}
+}
+
+function tourNext(){showTourStep(_tourState.step+1);}
+function tourPrev(){showTourStep(_tourState.step-1);}
+
+async function endTour(markSeen){
+  _tourState.active=false;
+  if(_tourState.el){_tourState.el.remove();_tourState.el=null;}
+  if(markSeen){
+    const u=currentUser();
+    if(u&&!u.hasSeenTour){
+      u.hasSeenTour=true;
+      try{await saveUserByName(getSession());}catch(e){}
+    }
+  }
+}
+
+window.startGuidedTour=startGuidedTour;
+window.tourNext=tourNext;
+window.tourPrev=tourPrev;
+window.endTour=endTour;
+
 window.navTo=navTo;
 window.openMenu=openMenu;
 window.closeMenu=closeMenu;
@@ -5179,6 +5498,13 @@ window.importBackup=importBackup;
 window.toggleQuickstart=toggleQuickstart;
 window.refreshAdminUsers=renderAdminUsers;
 window.renderAdminUsers=renderAdminUsers;
+// Version debounced pour le search (évite le re-render à chaque frappe)
+let _adminSearchDebounce=null;
+function debouncedRenderAdminUsers(){
+  clearTimeout(_adminSearchDebounce);
+  _adminSearchDebounce=setTimeout(renderAdminUsers,150);
+}
+window.debouncedRenderAdminUsers=debouncedRenderAdminUsers;
 window.goHome=function(){navTo('home');};
 // GeoGuessr
 window.refreshGeoSetup=refreshGeoSetup;
@@ -5228,6 +5554,11 @@ onAuthStateChanged(_auth,async (user)=>{
       refreshTopbar();
       navTo('home');
       _firebaseReady=true;
+      // Lancer le tour pour les nouveaux joueurs (après un délai pour que la home soit prête)
+      setTimeout(()=>{
+        const u=currentUser();
+        if(u&&!u.hasSeenTour){startGuidedTour();}
+      },800);
     }else{
       // Déconnecté
       _firebaseUser=null;
